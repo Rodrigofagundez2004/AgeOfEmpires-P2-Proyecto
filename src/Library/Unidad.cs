@@ -9,5 +9,5 @@ public abstract class Unidad
     public int Velocidad { get; set; }
 
     public abstract Task RealizarAccion(); //Este metodo va a determinar la accion que tenga una unidad
-    public abstract Task Mover() 
+    public abstract Task Mover();
 }
