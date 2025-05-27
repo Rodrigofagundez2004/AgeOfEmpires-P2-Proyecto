@@ -1,7 +1,5 @@
-using System.Threading.Tasks;
-
-namespace Library:
-    public interface IRecolector
+namespace Library;
+public interface IRecolecotr
 {
-    public abstract Task Recolectar();
+    Task Recolectar();
 }
