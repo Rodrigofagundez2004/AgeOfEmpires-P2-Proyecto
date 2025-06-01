@@ -1,6 +1,7 @@
 namespace Library;
 
-public interface Iatacante
+public interface IAtacante
 {
-    Task Atacar();
+    Task<bool> Atacar(IAtacable objetivo);
+    int PuntosDeAtaque { get; }
 }
