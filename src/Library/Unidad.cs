@@ -43,7 +43,7 @@ public abstract class Unidad
 
         ///necesito ayuda mvoerme en diagnola preguntar
     }
-    protected virtual int GetDelay()
+    protected virtual int GetDelay() //Metodo virtual que lo voy a llamar en cada clase que se pueda mover 
     {
         return 400;
     }
