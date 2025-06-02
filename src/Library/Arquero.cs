@@ -14,12 +14,16 @@ public class Arquero: Unidad, IAtacante , IAtacable
     }
     public virtual async Task<int> RecibirDaño(int daño)
     {
-        VidaActual -= daño;
+        int dañoEfectivo = daño - Defensa;
+        if (dañoEfectivo < 0)
+            dañoEfectivo = 0;
+
+        VidaActual -= dañoEfectivo;
         if (VidaActual < 0)
-        {
             VidaActual = 0;
-            await Task.Delay(300);
-        }
+
+        await Task.Delay(200);
+
         return VidaActual;
     }
     protected override int GetDelay()

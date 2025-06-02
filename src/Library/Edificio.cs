@@ -8,6 +8,7 @@ public abstract class Edificio : IAtacable
     public int VidaMaxima {  get; set; }
     public int VidaActual {  get; set; }   
     public string Name { get; set; }
+
     public Edificio(int VidaMaxima, int VidaActual, string Name)
     {
         this.VidaMaxima = vidaMaxima;
@@ -15,6 +16,7 @@ public abstract class Edificio : IAtacable
         this.Name = name;
 
     }
+    
     public virtual async Task <int> RecibirDaño(int daño)
     {
         VidaActual -= daño;
@@ -27,4 +29,6 @@ public abstract class Edificio : IAtacable
         return VidaActual;
 
     }
+
+     
 }
