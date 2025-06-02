@@ -41,5 +41,6 @@ namespace Library
             //logica que aun estoy por ver 
             return Task.CompletedTask;
         }
+        public virtual async Task <int> Reclolectar 
     }
 }
