@@ -5,7 +5,8 @@ public abstract class Unidad
     public int X { get; protected set; }
     public int Y { get; protected set; }
     public string Nombre { get; protected set; }
-    public int Vida { get; set; }
+    public int VidaActual { get; set; }
+    public int VidaMaxima { get; set; }
     public int Ataque { get; set; }
     public int Defensa { get; set; }
     public int Velocidad { get; set; }
@@ -45,7 +46,7 @@ public abstract class Unidad
     }
     protected virtual int GetDelay() //Metodo virtual que lo voy a llamar en cada clase que se pueda mover 
     {
-        return 400;
+        return 500 - Velocidad * 10;
     }
 
     public abstract Task RealizarAccion(); //Este metodo va a determinar la accion que tenga una unidad

@@ -2,5 +2,5 @@ namespace Library;
 
 public interface IAtacante
 {
-    Task<int> Atacar();
+    Task<int> Atacar(IAtacable objetivo);
 }
