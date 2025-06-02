@@ -6,4 +6,5 @@ public enum TipoRecurso
     Alimento,
     Oro,
     Piedra
+       
 }

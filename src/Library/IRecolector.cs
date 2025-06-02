@@ -1,5 +1,5 @@
 namespace Library;
 public interface IRecolecotr
 {
-    Task Recolectar();
+    Task <int> Recolectar(Irecursos recurso);
 }
