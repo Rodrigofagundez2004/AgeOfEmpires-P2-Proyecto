@@ -11,5 +11,12 @@ namespace Library
         {
             get { return UnidadOcupante != null; }
         }
+        public Celda(int x, int y)
+        {
+            X = x;
+            Y = y;
+            UnidadOcupante = null;
+        }
     }
+    
 }
