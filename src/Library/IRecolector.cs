@@ -1,5 +1,6 @@
 namespace Library;
-public interface IRecolecotr
+public interface IRecolector 
 {
-    Task Recolectar();
+    public double VelocidadDeRecoleccion { get; set; }
+    Task Recolectar(IRecursos fuente, IAlmacenes almacen);
 }
