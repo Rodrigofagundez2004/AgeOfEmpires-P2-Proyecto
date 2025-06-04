@@ -31,7 +31,16 @@ namespace Library
 
             return VidaActual;
         }
-
+        public virtual async Task Construir(int x , int y, Edificio estructura, Mapa mapa)
+        {
+            var celda = mapa.ObtenerCelda(x ,y);
+            if (celda.EstaOcupada)
+            {
+                throw new InvalidOperationException("No podes construir una estructura aqui, ya que esta ocupada");
+                mapa.PosicionarUnidad(estructura ,x ,y);
+                await Task.Delay(20000);  // tiempo estipulado para construir
+            }
+        }
         protected override int GetDelay()
         {
             return 500 - Velocidad * 15;

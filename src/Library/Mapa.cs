@@ -35,6 +35,7 @@ namespace Library
             unidad.Posicionar(x, y); // Método que actualiza X e Y
         }
 
+
         public void MoverUnidad(Unidad unidad, int destinoX, int destinoY)
         {
             var origen = ObtenerCelda(unidad.X, unidad.Y);
