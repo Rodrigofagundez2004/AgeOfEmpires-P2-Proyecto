@@ -16,31 +16,25 @@ public abstract class Unidad
         X = x;
         Y = y;
     }
-
-    public virtual async Task Mover(int DestinoX, int DestinoY)
+    public async Task MoverConSimulacion(Mapa mapa, int destinoX, int destinoY)
     {
-        if (DestinoX < 0 || DestinoX >= 100 || DestinoY < 0 || DestinoY >= 100)
-        {
-            throw new Exception("Te has salido del mapa, prueba moverte a otro lugar");
-        }
         
-        if (X < destinoX)
+        while (X != destinoX || Y != destinoY)
         {
-            X = X + 1;
+            if (X < destinoX) X++;
+            else if (X > destinoX) X--;
+
+            await Task.Delay(GetDelay());
+
+            if (Y < destinoY) Y++;
+            else if (Y > destinoY) Y--;
+
+            await Task.Delay(GetDelay());
         }
-        else if (X > destinoX)
-        {
-            X = X - 1;
-        }
-        await Task.Delay(GetDelay());
-        if (Y < destinoY)
-        {
-            Y = Y + 1;
-        }
-        else if (Y > destinoY) 
-        {
-            Y = Y - 1; }
-        await Task.Delay(GetDelay());
+
+        mapa.MoverUnidad(this, destinoX, destinoY);
+    }
+
 
         ///necesito ayuda mvoerme en diagnola preguntar
     }
