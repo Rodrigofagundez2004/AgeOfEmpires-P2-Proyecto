@@ -32,7 +32,7 @@ namespace Library
                 throw new Exception("La celda ya esta ocupada");
 
             celda.UnidadOcupante = unidad;
-            unidad.Posicionar(x, y); // Método que actualiza X e Y
+            unidad.Posicionar(x, y); //metodo q solamente atualiza
         }
 
 

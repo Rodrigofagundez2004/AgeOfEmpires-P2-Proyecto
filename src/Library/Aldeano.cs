@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Library
 {
-    public class Aldeano : Unidad, IRecolector, IAtacable, IConstructor
+    public class Aldeano : Unidad, IRecolector, IAtacable, IConstructor, IAtacante
     {
         public double VelocidadDeRecoleccion { get; set; } = 1.0;
         public Aldeano(string nombre, int x, int y, int vidaMaxima, int vidaActual, int defensa, int velocidad, int ataque)
@@ -31,6 +31,12 @@ namespace Library
 
             return VidaActual;
         }
+        public virtual async Task<int> Atacar(IAtacable objetivo)
+        {
+            return await objetivo.RecibirDaño(Ataque);
+
+        }
+
         public virtual async Task Construir(int x , int y, Edificio estructura, Mapa mapa)
         {
             var celda = mapa.ObtenerCelda(x ,y);
