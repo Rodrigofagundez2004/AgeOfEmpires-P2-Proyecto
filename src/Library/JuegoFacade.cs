@@ -1,22 +1,39 @@
 using System;
 using System.Collections.Generic;
+using System.Management.Instrumentation;
 
-namespace Library;
-public class JuegoFacade
+namespace Library
 {
-    private CentroCivico centroCivico;
-    public JuegoFacade()
+    public class JuegoFacade
     {
-        centroCivico = new CentroCivico();
-        
-        Console.WriteLine("Has empezado el Juego, con 3 aldeanos y 1 Centro civico")
-    }
-    IReadOnlyList<Aldeano> aldeanos = centroCivico.ObtenerAldeanos();
+        private CentroCivico centroCivico;
 
-    foreach (Aldeano a in aldeanos)
-    {
-        Console.Writeline($"-{a.Nombre} / Vida: {a.VidaActual}");
-    
+        public JuegoFacade()
+        {
+            centroCivico = new CentroCivico();
+            
+
+            Console.WriteLine("Has empezado el Juego, con 3 aldeanos y 1 Centro Cívico");
+
+            MostrarAldeanosDelCentro();
+        }
+
+        private void MostrarAldeanosDelCentro()
+        {
+            IReadOnlyList<Aldeano> aldeanos = centroCivico.ObtenerAldeanos();
+
+            if (aldeanos.Count == 0) 
+            {
+                Console.WriteLine("No hay aldeanos en el Centro Cívico.");
+                return;
+            }
+
+            Console.WriteLine("Aldeanos en el Centro Cívico:");
+            foreach (Aldeano a in aldeanos)
+            {
+                Console.WriteLine($"- {a.Nombre} / Vida: {a.VidaActual}");
+            }
+        }
+        
     }
-    
 }
