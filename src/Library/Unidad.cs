@@ -35,8 +35,7 @@ public abstract class Unidad
         mapa.MoverUnidad(this, destinoX, destinoY);
     }
 
-
-        ///necesito ayuda mvoerme en diagnola preguntar
+       
     }
     protected virtual int GetDelay() //Metodo virtual que lo voy a llamar en cada clase que se pueda mover 
     {

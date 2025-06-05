@@ -4,8 +4,8 @@ namespace Library;
 
 public class CentroCivico : Edificio
 {
-    public int CapacidadMaxima { get; set; }
-    public List<Aldeano> AldeanosDentro { get; set; }
+    public int CapacidadMaxima { get; set; } = 10;
+    private List<Aldeano> AldeanosDentro { get; set; }
     public CentroCivico()
         : base(vidaMaxima: 3500, vidaActual: 3500, name: "CentroCivico")
     {
@@ -28,5 +28,11 @@ public class CentroCivico : Edificio
         {
             return false;
         }
+        
     }
+    public IReadOnlyList<Aldeano> ObtenerAldeanos()
+    {
+        return AldeanosDentro.AsReadOnly();  //es una version de solo lectura de la lista, nadie puede modificarlo desde afuera, pero si hay acceso
+    }
+
 }

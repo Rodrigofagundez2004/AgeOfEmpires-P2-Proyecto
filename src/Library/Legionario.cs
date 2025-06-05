@@ -1,19 +1,23 @@
+using System;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace Library
 {
-    public class Infanteria : Unidad, IAtacante, IAtacable
+    public class Legionario : Unidad, ICivilizacion, IAtacable, IAtacante
     {
-        public Infanteria(string nombre, int x, int y, int vidaMaxima, int vidaActual, int defensa, int velocidad, int ataque)
+        public string NombreCivilizacion => "Romanos";
+        public TipoUnidad UnidadEspecial => TipoUnidad.Legionario;
+
+        public Berserker(string nombre, int x, int y, int vidaMaxima, int vidaActual, int defensa, int velocidad, int ataque)
             : base(nombre, x, y)
         {
-            this.VidaActual = 100;
-            this.VidaMaxima = 100;
-            this.Defensa = 80;
+            this.VidaActual = 110;
+            this.VidaMaxima = 110;
+            this.Defensa = 90;
             this.Velocidad = 60;
-            this.Ataque = 70;
+            this.Ataque = 80;
         }
-
         public virtual async Task<int> RecibirDaño(int daño)
         {
             int dañoEfectivo = daño - Defensa;
@@ -39,12 +43,12 @@ namespace Library
 
         protected override int GetDelay()
         {
-            return 370 - Velocidad * 10;
+            return 373 - Velocidad * 10;
         }
 
         public override Task RealizarAccion()
         {
-            
+
             return Task.CompletedTask;
         }
     }

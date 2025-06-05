@@ -10,11 +10,11 @@ namespace Library
         public Aldeano(string nombre, int x, int y, int vidaMaxima, int vidaActual, int defensa, int velocidad, int ataque)
             : base(nombre, x, y)
         {
-            this.VidaActual = vidaActual;
-            this.VidaMaxima = vidaMaxima;
-            this.Defensa = defensa;
-            this.Velocidad = velocidad;
-            this.Ataque = ataque;
+            this.VidaActual = 70;
+            this.VidaMaxima = 70;
+            this.Defensa = 30;
+            this.Velocidad = 70;
+            this.Ataque = 30;
         }
 
         public virtual async Task<int> RecibirDaño(int daño)
