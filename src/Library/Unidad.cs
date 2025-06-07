@@ -5,7 +5,7 @@ public abstract class Unidad
     public int X { get; protected set; }
     public int Y { get; protected set; }
     public string Nombre { get; protected set; }
-    public int VidaActual { get; set; }
+    public int VidaActual { get; protected set; }
     public int VidaMaxima { get; set; }
     public int Ataque { get; set; }
     public int Defensa { get; set; }
@@ -43,4 +43,19 @@ public abstract class Unidad
     }
 
     public abstract Task RealizarAccion(); //Este metodo va a determinar la accion que tenga una unidad
+
+    public void RecibirDanio(int cantidad)
+    {
+        VidaActual -= cantidad;
+
+        if (VidaActual <= 0)
+        {
+            VidaActual = 0;
+            Console.WriteLine($"{GetType().Name} ha muerto.");
+        }
+        else
+        {
+            Console.WriteLine($"{GetType().Name} recibió {cantidad} de daño. Vida restante: {VidaActual}");
+        }
+    }
 }
