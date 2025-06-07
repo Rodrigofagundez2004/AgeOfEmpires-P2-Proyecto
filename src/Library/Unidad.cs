@@ -44,9 +44,9 @@ public abstract class Unidad
 
     public abstract Task RealizarAccion(); //Este metodo va a determinar la accion que tenga una unidad
 
-    public void RecibirDanio(int cantidad)
+    public async Task<int> RecibirDaño(int daño)
     {
-        VidaActual -= cantidad;
+        VidaActual -= daño;
 
         if (VidaActual <= 0)
         {
@@ -55,7 +55,10 @@ public abstract class Unidad
         }
         else
         {
-            Console.WriteLine($"{GetType().Name} recibió {cantidad} de daño. Vida restante: {VidaActual}");
+            Console.WriteLine($"{GetType().Name} recibió {daño} de daño. Vida restante: {VidaActual}");
         }
+
+        // Aquí no hay await, así que devolvemos Task con resultado inmediato
+        return await Task.FromResult(VidaActual);
     }
 }
