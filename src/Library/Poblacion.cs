@@ -1,3 +1,4 @@
+namespace Library;
 public class Poblacion
 {
     private const int MaxAldeanos = 20;

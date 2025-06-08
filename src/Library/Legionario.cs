@@ -8,8 +8,7 @@ namespace Library
     {
         public string NombreCivilizacion => "Romanos";
         public TipoUnidad UnidadEspecial => TipoUnidad.Legionario;
-
-        public Berserker(string nombre, int x, int y, int vidaMaxima, int vidaActual, int defensa, int velocidad, int ataque)
+        public Legionario(string nombre, int x, int y, int vidaMaxima, int vidaActual, int defensa, int velocidad, int ataque)
             : base(nombre, x, y)
         {
             this.VidaActual = 110;
@@ -18,19 +17,16 @@ namespace Library
             this.Velocidad = 60;
             this.Ataque = 80;
         }
-        public virtual async Task<int> RecibirDaño(int daño)
-        {
-            int dañoEfectivo = daño - Defensa;
-            if (dañoEfectivo < 0)
-            {
-                dañoEfectivo = 0;
-            }
 
-            VidaActual -= dañoEfectivo;
+        public virtual async Task<int> RecibirDaÃ±o(int daÃ±o)
+        {
+            int daÃ±oEfectivo = daÃ±o - Defensa;
+            if (daÃ±oEfectivo < 0)
+                daÃ±oEfectivo = 0;
+
+            VidaActual -= daÃ±oEfectivo;
             if (VidaActual < 0)
-            {
                 VidaActual = 0;
-            }
 
             await Task.Delay(200);
             return VidaActual;
@@ -38,7 +34,7 @@ namespace Library
 
         public virtual async Task<int> Atacar(IAtacable objetivo)
         {
-            return await objetivo.RecibirDaño(Ataque);
+            return await objetivo.RecibirDaÃ±o(Ataque);
         }
 
         protected override int GetDelay()
@@ -48,7 +44,6 @@ namespace Library
 
         public override Task RealizarAccion()
         {
-
             return Task.CompletedTask;
         }
     }

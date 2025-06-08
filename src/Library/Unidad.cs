@@ -5,20 +5,28 @@ public abstract class Unidad
     public int X { get; protected set; }
     public int Y { get; protected set; }
     public string Nombre { get; protected set; }
-    public int VidaActual { get; protected set; }
+    public int VidaActual { get; set; }
     public int VidaMaxima { get; set; }
     public int Ataque { get; set; }
     public int Defensa { get; set; }
     public int Velocidad { get; set; }
-    protected Unidad(string nombre, int x , int y)
+
+    public void Posicionar(int x, int y)
+    {
+        X = x;
+        Y = y;
+    }
+
+    protected Unidad(string nombre, int x, int y)
     {
         Nombre = nombre;
         X = x;
         Y = y;
     }
+
     public async Task MoverConSimulacion(Mapa mapa, int destinoX, int destinoY)
     {
-        
+
         while (X != destinoX || Y != destinoY)
         {
             if (X < destinoX) X++;
@@ -35,8 +43,7 @@ public abstract class Unidad
         mapa.MoverUnidad(this, destinoX, destinoY);
     }
 
-       
-    }
+    
     protected virtual int GetDelay() //Metodo virtual que lo voy a llamar en cada clase que se pueda mover 
     {
         return 500 - Velocidad * 10;

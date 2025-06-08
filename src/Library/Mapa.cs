@@ -5,13 +5,17 @@ namespace Library
     public class Mapa
     {
         public const int Tamaño = 100;
+        public int Ancho => Tamaño;
+        public int Alto => Tamaño;  
+
         public Celda[,] Celdas { get; private set; }
         private bool[,] Bosques;
-
-        public Mapa()
+        
+        public Mapa(int ancho = 100, int alto = 100)
         {
             Celdas = new Celda[Tamaño, Tamaño];
             Bosques = new bool[Tamaño, Tamaño];
+            
             for (int x = 0; x < Tamaño; x++)
             {
                 for (int y = 0; y < Tamaño; y++)
@@ -20,10 +24,11 @@ namespace Library
                 }
             }
         }
+
         public Celda ObtenerCelda(int x, int y)
         {
             if (x < 0 || y < 0 || x >= Tamaño || y >= Tamaño)
-                throw new ArgumentOutOfRangeException("te saliste del mapa");
+                throw new ArgumentOutOfRangeException("Te saliste del mapa");
 
             return Celdas[x, y];
         }
@@ -32,28 +37,49 @@ namespace Library
         {
             var celda = ObtenerCelda(x, y);
             if (celda.EstaOcupada)
-                throw new Exception("La celda ya esta ocupada");
+                throw new Exception("La celda ya está ocupada");
 
             celda.UnidadOcupante = unidad;
-            unidad.Posicionar(x, y); //metodo q solamente atualiza
+            unidad.Posicionar(x, y);
         }
+        
+        public bool PuedeColocar(Posicion posicion)
+        {
+            return EsCeldaValida(posicion.X, posicion.Y) && 
+                   !Celdas[posicion.X, posicion.Y].EstaOcupada;
+        }
+
+        public void ColocarEdificio(Edificio edificio, Posicion posicion)
+        {
+            if (!PuedeColocar(posicion))
+                throw new Exception("No se puede colocar el edificio en esta posición");
+            
+        }
+
+        public void ColocarUnidad(Unidad unidad, Posicion posicion)
+        {
+            PosicionarUnidad(unidad, posicion.X, posicion.Y);
+        }
+
         public void MoverUnidad(Unidad unidad, int destinoX, int destinoY)
         {
             var origen = ObtenerCelda(unidad.X, unidad.Y);
             var destino = ObtenerCelda(destinoX, destinoY);
 
             if (destino.EstaOcupada)
-                throw new Exception("No se puede mover destino ocupado");
+                throw new Exception("No se puede mover, destino ocupado");
 
             origen.UnidadOcupante = null;
             destino.UnidadOcupante = unidad;
             unidad.Posicionar(destinoX, destinoY);
-        } 
+        }
+
         public void LiberarCelda(int x, int y)
         {
             var celda = ObtenerCelda(x, y);
             celda.UnidadOcupante = null;
         }
+
         public void MostrarMapa()
         {
             for (int y = 0; y < Tamaño; y++)
@@ -67,10 +93,12 @@ namespace Library
                 Console.WriteLine();
             }
         }
+
         public bool EsCeldaValida(int x, int y)
         {
             return x >= 0 && y >= 0 && x < Tamaño && y < Tamaño;
         }
+
         public void GenerarBosques(int cantidad)
         {
             var libres = new List<(int x, int y)>();
@@ -90,6 +118,7 @@ namespace Library
                 Bosques[x, y] = true;
             }
         }
+
         public bool EsBosque(int x, int y)
         {
             return EsCeldaValida(x, y) && Bosques[x, y];
