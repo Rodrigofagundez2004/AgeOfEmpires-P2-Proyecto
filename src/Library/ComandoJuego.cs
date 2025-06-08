@@ -630,66 +630,10 @@ namespace Library
     // ==========================================
     // ALMACENES ADICIONALES PARA COMPLETAR
     // ==========================================
-    public class AlmacenMadera : IAlmacenes
-    {
-        public string Name { get; set; } = "Almacén de Madera";
-        public int CapacidadActual { get; set; } = 0;
-        public int CapacidadMaxima { get; set; } = 1000;
 
-        public async Task Guardar(TipoRecurso tipo, int cantidad)
-        {
-            if (tipo != TipoRecurso.Madera)
-                throw new ArgumentException("Este almacén solo acepta madera");
 
-            if (CapacidadActual + cantidad > CapacidadMaxima)
-                cantidad = CapacidadMaxima - CapacidadActual;
 
-            CapacidadActual += cantidad;
-            await Task.Delay(100);
-            Console.WriteLine($"🌲 Guardados {cantidad} de madera. Total: {CapacidadActual}/{CapacidadMaxima}");
-        }
-    }
-
-    public class AlmacenAlimento : IAlmacenes
-    {
-        public string Name { get; set; } = "Almacén de Alimento";
-        public int CapacidadActual { get; set; } = 0;
-        public int CapacidadMaxima { get; set; } = 800;
-
-        public async Task Guardar(TipoRecurso tipo, int cantidad)
-        {
-            if (tipo != TipoRecurso.Alimento)
-                throw new ArgumentException("Este almacén solo acepta alimento");
-
-            if (CapacidadActual + cantidad > CapacidadMaxima)
-                cantidad = CapacidadMaxima - CapacidadActual;
-
-            CapacidadActual += cantidad;
-            await Task.Delay(100);
-            Console.WriteLine($"🥖 Guardados {cantidad} de alimento. Total: {CapacidadActual}/{CapacidadMaxima}");
-        }
-    }
-
-    public class AlmacenPiedra : IAlmacenes
-    {
-        public string Name { get; set; } = "Almacén de Piedra";
-        public int CapacidadActual { get; set; } = 0;
-        public int CapacidadMaxima { get; set; } = 600;
-
-        public async Task Guardar(TipoRecurso tipo, int cantidad)
-        {
-            if (tipo != TipoRecurso.Piedra)
-                throw new ArgumentException("Este almacén solo acepta piedra");
-
-            if (CapacidadActual + cantidad > CapacidadMaxima)
-                cantidad = CapacidadMaxima - CapacidadActual;
-
-            CapacidadActual += cantidad;
-            await Task.Delay(100);
-            Console.WriteLine($"🪨 Guardados {cantidad} de piedra. Total: {CapacidadActual}/{CapacidadMaxima}");
-        }
-    }
-
+    
     // ==========================================
     // CIVILIZACIONES COMPLETAS
     // ==========================================
