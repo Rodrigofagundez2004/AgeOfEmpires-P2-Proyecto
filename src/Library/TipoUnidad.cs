@@ -6,9 +6,8 @@ public enum TipoUnidad
 	Infanteria,
 	Arquero,
 	Caballeria,
-	// Unidades especiales por civilización
+	// Unidades especiales por civilizaciï¿½n
 	Samurai,      // Japoneses
 	Legionario,   // Romanos
 	Berserker     // Vikingos
-}
 }

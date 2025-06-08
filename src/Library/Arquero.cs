@@ -4,7 +4,7 @@ namespace Library;
 public class Arquero: Unidad, IAtacante , IAtacable
 {
     public Arquero (string nombre, int x, int y, int vidaMaxima, int vidaActual, int defensa, int velocidad, int ataque)
-    : base(nombre, x, y)
+        : base(nombre, x, y)
     {
         this.VidaActual = 100;
         this.VidaMaxima = 100;
@@ -12,19 +12,16 @@ public class Arquero: Unidad, IAtacante , IAtacable
         this.Velocidad = 60;
         this.Ataque = 70;
     }
-    public virtual async Task<int> RecibirDaño(int daño)
+    
+    public virtual async Task<int> RecibirDaÃ±o(int daÃ±o)
     {
-        int dañoEfectivo = daño - Defensa;
-        if (dañoEfectivo < 0)
-        {
-            dañoEfectivo = 0;
-        }
+        int daÃ±oEfectivo = daÃ±o - Defensa;
+        if (daÃ±oEfectivo < 0)
+            daÃ±oEfectivo = 0;
 
-        VidaActual -= dañoEfectivo;
+        VidaActual -= daÃ±oEfectivo;
         if (VidaActual < 0)
-        {
             VidaActual = 0;
-        }
 
         await Task.Delay(200);
         return VidaActual;
@@ -32,7 +29,7 @@ public class Arquero: Unidad, IAtacante , IAtacable
 
     public virtual async Task<int> Atacar(IAtacable objetivo)
     {
-        return await objetivo.RecibirDaño(Ataque);
+        return await objetivo.RecibirDaÃ±o(Ataque);
     }
 
     protected override int GetDelay()
@@ -42,8 +39,6 @@ public class Arquero: Unidad, IAtacante , IAtacable
 
     public override Task RealizarAccion()
     {
-        
         return Task.CompletedTask;
     }
-}
 }

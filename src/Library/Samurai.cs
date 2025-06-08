@@ -18,19 +18,17 @@ namespace Library
             this.Velocidad = 70;
             this.Ataque = 80;
         }
-        public virtual async Task<int> RecibirDa�o(int da�o)
+        
+        // CORREGIDO: Cambiar nombre del método
+        public virtual async Task<int> RecibirDaño(int daño)
         {
-            int da�oEfectivo = da�o - Defensa;
-            if (da�oEfectivo < 0)
-            {
-                da�oEfectivo = 0;
-            }
+            int dañoEfectivo = daño - Defensa;
+            if (dañoEfectivo < 0)
+                dañoEfectivo = 0;
 
-            VidaActual -= da�oEfectivo;
+            VidaActual -= dañoEfectivo;
             if (VidaActual < 0)
-            {
                 VidaActual = 0;
-            }
 
             await Task.Delay(200);
             return VidaActual;
@@ -38,7 +36,7 @@ namespace Library
 
         public virtual async Task<int> Atacar(IAtacable objetivo)
         {
-            return await objetivo.RecibirDa�o(Ataque);
+            return await objetivo.RecibirDaño(Ataque);
         }
 
         protected override int GetDelay()
@@ -48,7 +46,6 @@ namespace Library
 
         public override Task RealizarAccion()
         {
-
             return Task.CompletedTask;
         }
     }

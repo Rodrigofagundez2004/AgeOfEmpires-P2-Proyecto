@@ -4,6 +4,6 @@ namespace Library;
 
 public interface IAtacable
 {
-	Task<int> RecibirDaño(int daño);
+    Task<int> RecibirDaÃ±o(int daÃ±o);
     int VidaActual { get; }
 }

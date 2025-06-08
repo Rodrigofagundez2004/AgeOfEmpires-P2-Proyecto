@@ -4,7 +4,7 @@ namespace Library;
 public class Caballeria : Unidad, IAtacante, IAtacable
 {
     public Caballeria(string nombre, int x, int y, int vidaMaxima, int vidaActual, int defensa, int velocidad, int ataque)
-    : base(nombre, x, y)
+        : base(nombre, x, y)
     {
         this.VidaActual = 100;
         this.VidaMaxima = 100;
@@ -12,19 +12,17 @@ public class Caballeria : Unidad, IAtacante, IAtacable
         this.Velocidad = 100;
         this.Ataque = 60;
     }
-    public virtual async Task<int> RecibirDa�o(int da�o)
+    
+    // CORREGIDO: Cambiar nombre del método
+    public virtual async Task<int> RecibirDaño(int daño)
     {
-        int da�oEfectivo = da�o - Defensa;
-        if (da�oEfectivo < 0)
-        {
-            da�oEfectivo = 0;
-        }
+        int dañoEfectivo = daño - Defensa;
+        if (dañoEfectivo < 0)
+            dañoEfectivo = 0;
 
-        VidaActual -= da�oEfectivo;
+        VidaActual -= dañoEfectivo;
         if (VidaActual < 0)
-        {
             VidaActual = 0;
-        }
 
         await Task.Delay(200);
         return VidaActual;
@@ -32,7 +30,7 @@ public class Caballeria : Unidad, IAtacante, IAtacable
 
     public virtual async Task<int> Atacar(IAtacable objetivo)
     {
-        return await objetivo.RecibirDa�o(Ataque);
+        return await objetivo.RecibirDaño(Ataque);
     }
 
     protected override int GetDelay()
@@ -42,8 +40,6 @@ public class Caballeria : Unidad, IAtacante, IAtacable
 
     public override Task RealizarAccion()
     {
-
         return Task.CompletedTask;
     }
-}
 }
