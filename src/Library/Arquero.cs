@@ -1,49 +1,51 @@
 using System.Threading.Tasks;
 
-namespace Library;
-public class Arquero: Unidad, IAtacante , IAtacable
+namespace Library
 {
-    public Arquero (string nombre, int x, int y, int vidaMaxima, int vidaActual, int defensa, int velocidad, int ataque)
-    : base(nombre, x, y)
+    public class Arquero : Unidad, IAtacante, IAtacable
     {
-        this.VidaActual = 100;
-        this.VidaMaxima = 100;
-        this.Defensa = 60;
-        this.Velocidad = 60;
-        this.Ataque = 70;
-    }
-    public virtual async Task<int> RecibirDaño(int daño)
-    {
-        int dañoEfectivo = daño - Defensa;
-        if (dañoEfectivo < 0)
+        public Arquero(string nombre, int x, int y, int vidaMaxima, int vidaActual, int defensa, int velocidad, int ataque)
+        : base(nombre, x, y)
         {
-            dañoEfectivo = 0;
+            this.VidaActual = 100;
+            this.VidaMaxima = 100;
+            this.Defensa = 60;
+            this.Velocidad = 60;
+            this.Ataque = 70;
+        }
+        public virtual async Task<int> RecibirDaño(int daño)
+        {
+            int dañoEfectivo = daño - Defensa;
+            if (dañoEfectivo < 0)
+            {
+                dañoEfectivo = 0;
+            }
+
+            VidaActual -= dañoEfectivo;
+            if (VidaActual < 0)
+            {
+                VidaActual = 0;
+            }
+
+            await Task.Delay(200);
+            return VidaActual;
         }
 
-        VidaActual -= dañoEfectivo;
-        if (VidaActual < 0)
+        public virtual async Task<int> Atacar(IAtacable objetivo)
         {
-            VidaActual = 0;
+            return await objetivo.RecibirDaño(Ataque);
         }
 
-        await Task.Delay(200);
-        return VidaActual;
-    }
+        protected override int GetDelay()
+        {
+            return 370 - Velocidad * 10;
+        }
 
-    public virtual async Task<int> Atacar(IAtacable objetivo)
-    {
-        return await objetivo.RecibirDaño(Ataque);
-    }
+        public override Task RealizarAccion()
+        {
 
-    protected override int GetDelay()
-    {
-        return 370 - Velocidad * 10;
-    }
-
-    public override Task RealizarAccion()
-    {
-        
-        return Task.CompletedTask;
+            return Task.CompletedTask;
+        }
     }
 }
-}
+

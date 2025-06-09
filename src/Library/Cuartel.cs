@@ -1,5 +1,7 @@
-namespace Library;
-public class Cuartel : Edificio
+namespace Library
 {
+    public class Cuartel : Edificio
+    {
 
+    }
 }

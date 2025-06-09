@@ -1,6 +1,8 @@
-namespace Library;
-public interface IRecolector 
+namespace Library
 {
-    public double VelocidadDeRecoleccion { get; set; }
-    Task Recolectar(IRecursos fuente, IAlmacenes almacen);
+    public interface IRecolector
+    {
+        public double VelocidadDeRecoleccion { get; set; }
+        Task Recolectar(IRecursos fuente, IAlmacenes almacen);
+    }
 }

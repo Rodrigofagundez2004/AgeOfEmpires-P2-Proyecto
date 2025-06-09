@@ -1,9 +1,10 @@
 using System.Threading.Tasks;
 
-namespace Library;
-
-public interface IAtacable
+namespace Library
 {
-	Task<int> RecibirDaño(int daño);
-    int VidaActual { get; }
+    public interface IAtacable
+    {
+        Task<int> RecibirDaño(int daño);
+        int VidaActual { get; }
+    }
 }

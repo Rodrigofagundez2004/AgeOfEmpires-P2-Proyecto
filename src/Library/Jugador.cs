@@ -1,15 +1,17 @@
 using System.Collections.Generic;
 using System;
-
-public class Jugador
+namespace Library
 {
-    public Dictionary<TipoRecurso, IRecursos> Recursos { get; private set; }
-    public List<Unidad> Unidades { get; private set; }
 
-    public Jugador()
+    public class Jugador
     {
-        Unidades = new List<Unidad>();
-        Recursos = new Dictionary<TipoRecurso, IRecursos>
+        public Dictionary<TipoRecurso, IRecursos> Recursos { get; private set; }
+        public List<Unidad> Unidades { get; private set; }
+
+        public Jugador()
+        {
+            Unidades = new List<Unidad>();
+            Recursos = new Dictionary<TipoRecurso, IRecursos>
         {
             { TipoRecurso.Madera, new RecursoMadera(100) },
             { TipoRecurso.Comida, new RecursoComida(100) },
@@ -17,4 +19,6 @@ public class Jugador
             {TipoRecurso.Piedra, new RecursoPiedra(100) }
         };
 
+        }
     }
+}

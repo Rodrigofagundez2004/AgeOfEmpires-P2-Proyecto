@@ -1,14 +1,16 @@
-namespace Library;
-
-public enum TipoUnidad
+namespace Library
 {
-	Aldeano,
-	Infanteria,
-	Arquero,
-	Caballeria,
-	// Unidades especiales por civilización
-	Samurai,      // Japoneses
-	Legionario,   // Romanos
-	Berserker     // Vikingos
-}
+
+	public enum TipoUnidad
+	{
+		Aldeano,
+		Infanteria,
+		Arquero,
+		Caballeria,
+		// Unidades especiales por civilización
+		Samurai,      // Japoneses
+		Legionario,   // Romanos
+		Berserker     // Vikingos
+	}
+
 }
