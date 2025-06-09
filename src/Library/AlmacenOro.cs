@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Library
 {
-    public class AlmacenMadera : IAlmacenes
+    public class AlmacenOro : IAlmacenes
     {
         public string Name { get; set; } = "Almacen de oro"
         public int CapacidadActual { get; set; } = 0;
