@@ -54,7 +54,7 @@ namespace Library
         public virtual async Task Recolectar(IRecursos fuente, IAlmacenes almacen)
         {
             if (fuente.EstaAgotado) return;
-            int cantidadRecolectada = (int)(VelocidadDeRecoleccion * 10);
+            int cantidadRecolectada = (int)(VelocidadDeRecoleccion * fuente.VelocidadDeRecoleccion * 10);
             if (fuente.CantidadDisponble < cantidadRecolectada)
             {
                 cantidadRecolectada = fuente.CantidadDisponible;

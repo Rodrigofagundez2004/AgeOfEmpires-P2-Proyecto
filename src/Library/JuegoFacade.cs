@@ -10,8 +10,10 @@ namespace Library
 
         public JuegoFacade()
         {
+            var mapa = new Mapa();
             centroCivico = new CentroCivico();
-            
+            //logica para posicioanr edificio en el lugar 00 
+
 
             Console.WriteLine("Has empezado el Juego, con 3 aldeanos y 1 Centro Cívico");
 
