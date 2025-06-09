@@ -4,16 +4,16 @@ using System.Threading.Tasks;
 namespace Library;
 public class AlmacenMadera : IAlmacenes
 {
-    public string Name { get; set; } = "Almacen de oro"
+    public string Name { get; set; } = "Almacen De Madera"
     public int CapacidadActual { get; set; } = 0;
-    public int CapacidadMaxima { get; set; } = 500;
+    public int CapacidadMaxima { get; set; } = 1000;
+    
 
-
-    public async Task<string> Guardar(TipoRecurso tipo, int cantidad)
+    public async Task<string> Guardar(TipoRecurso tipo , int cantidad)
     {
-        if (tipo != TipoRecurso.Oro)
+        if (tipo != TipoRecurso.Madera)
         {
-            throw new ArgumentException("Este almacen solo admite oro")
+            throw new ArgumentException("Este almacen solo admite madera")
         }
         if (CapacidadActual >= CapacidadMaxima)
         {
@@ -25,7 +25,7 @@ public class AlmacenMadera : IAlmacenes
         }
         CapacidadActual += cantidad;
         awiat Task.Delay(400);
-        return $"🥖 Guardados {cantidad} de oro. Total: {CapacidadActual}/{CapacidadMaxima}";
+        return $"🥖 Guardados {cantidad} de madera. Total: {CapacidadActual}/{CapacidadMaxima}";
 
 
     }
