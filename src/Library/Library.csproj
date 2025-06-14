@@ -6,4 +6,12 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Edificios\" />
+    <Folder Include="Enums\" />
+    <Folder Include="Interfaces\" />
+    <Folder Include="Logica del juego\" />
+    <Folder Include="Unidades\" />
+  </ItemGroup>
+
 </Project>

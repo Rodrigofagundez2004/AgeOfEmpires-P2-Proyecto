@@ -456,8 +456,7 @@ namespace Library
                 var almacen = new AlmacenOro(); // Simplificado
 
                 Console.WriteLine($"⛏️ {nombreAldeano} comenzó a recolectar {tipoRecurso}...");
-                await aldeano.Recolectar(fuenteRecurso, almacen);
-
+                await aldeano.RecolectarConInventario(fuenteRecurso, almacen, jugador, juego.Mapa);
                 // Agregar recursos al jugador
                 jugador.GestorRecursos.AgregarRecurso(tipo, 15);
 
