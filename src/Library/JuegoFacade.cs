@@ -92,10 +92,10 @@ namespace Library
                 Console.WriteLine("- " + b.Descripcion);
             }
         }
-        public void MoverUnidades(List<Unidad> unidades, int x, int y)
+        public void MoverUnidades(List<Unidad> unidades, int nuevax, int nuevay)
         {
             foreach (var u in unidades)
-                u.MoverA(x, y);
+                u.MoverA(nuevax, nuevay);
         }    
     }
 }
