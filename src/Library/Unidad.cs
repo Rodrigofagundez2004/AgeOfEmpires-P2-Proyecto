@@ -11,11 +11,18 @@
         public int Ataque { get; set; }
         public int Defensa { get; set; }
         public int Velocidad { get; set; }
-        protected Unidad(string nombre, int x, int y)
+        
+        public int CostoComida { get; set; }
+        
+        public int TiempoEntrenamientoSegundos { get; set; }
+        public TipoUnidad Tipo { get; set; }
+        protected Unidad(string nombre, int x, int y, int costoComida, int tiempoSegundos)
         {
             Nombre = nombre;
             X = x;
             Y = y;
+            CostoComida = costoComida;
+            TiempoEntrenamientoSegundos = tiempoSegundos;
         }
         public async Task MoverConSimulacion(Mapa mapa, int destinoX, int destinoY)
         {
@@ -35,14 +42,24 @@
 
             mapa.MoverUnidad(this, destinoX, destinoY);
         }
-
-       
-    }
-    protected virtual int GetDelay() //Metodo virtual que lo voy a llamar en cada clase que se pueda mover 
+        
+        protected virtual int GetDelay() //Metodo virtual que lo voy a llamar en cada clase que se pueda mover 
         {
             return 500 - Velocidad * 10;
         }
 
         public abstract Task RealizarAccion(); //Este metodo va a determinar la accion que tenga una unidad
+    
+        public Unidad (TipoUnidad tipo)
+    
+        {
+            Tipo = tipo;
+        }
+        public void MoverA(int nuevaX, int nuevaY)
+        
+        {
+            X = nuevaX;
+            Y = nuevaY;
+        }
     }
 }

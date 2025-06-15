@@ -18,19 +18,21 @@ namespace Library
 
         }
 
-        public virtual async Task<int> RecibirDaño(int daño)
+        public virtual async Task<int> RecibirDaï¿½o(int daï¿½o)
         {
-            VidaActual -= daño;
+            VidaActual -= daï¿½o;
 
             if (VidaActual < 0)
             {
                 VidaActual = 0;
-                await Task.Delay(200); //Pequeño tiempo de demora cuando se desmorona el edificio 
+                await Task.Delay(200); //Pequeï¿½o tiempo de demora cuando se desmorona el edificio 
             }
             return VidaActual;
 
         }
-
-
+        public Unidad EntrenarUnidad(TipoUnidad tipo)
+        {
+            return new Unidad(tipo);
+        }
     }
 }
