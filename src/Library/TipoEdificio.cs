@@ -1,14 +1,16 @@
-namespace Library;
-
-public enum TipoEdificio
+namespace Library
 {
-    CentroCivico,
-    Casa,
-    Cuartel,
-    // Almacenes de recursos
-    Molino,
-    Granja,
-    DepositoOro,
-    DepositoPiedra,
-    DepositoMadera
+
+    public enum TipoEdificio
+    {
+        CentroCivico,
+        Casa,
+        Cuartel,
+        // Almacenes de recursos
+        Molino,
+        Granja,
+        DepositoOro,
+        DepositoPiedra,
+        DepositoMadera
+    }
 }

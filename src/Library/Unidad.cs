@@ -1,53 +1,82 @@
-﻿namespace Library;
-
-public abstract class Unidad
+﻿namespace Library
 {
-    public int X { get; protected set; }
-    public int Y { get; protected set; }
-    public string Nombre { get; protected set; }
-    public int VidaActual { get; set; }
-    public int VidaMaxima { get; set; }
-    public int Ataque { get; set; }
-    public int Defensa { get; set; }
-    public int Velocidad { get; set; }
-    protected Unidad(string nombre, int x , int y)
-    {
-        Nombre = nombre;
-        X = x;
-        Y = y;
-    }
 
-    public virtual async Task Mover(int DestinoX, int DestinoY)
+    public abstract class Unidad
     {
-        if (DestinoX < 0 || DestinoX >= 100 || DestinoY < 0 || DestinoY >= 100)
+        public int X { get; protected set; }
+        public int Y { get; protected set; }
+        public string Nombre { get; protected set; }
+        public int VidaActual { get; set; }
+        public int VidaMaxima { get; set; }
+        public int Ataque { get; set; }
+        public int Defensa { get; set; }
+        public int Velocidad { get; set; }
+        
+        public int CostoComida { get; set; }
+        
+        public int TiempoEntrenamientoSegundos { get; set; }
+        public TipoUnidad Tipo { get; set; }
+        protected Unidad(string nombre, int x, int y, int costoComida, int tiempoSegundos)
         {
-            throw new Exception("Te has salido del mapa, prueba moverte a otro lugar");
+            Nombre = nombre;
+            X = x;
+            Y = y;
+            CostoComida = costoComida;
+            TiempoEntrenamientoSegundos = tiempoSegundos;
+        }
+        public async Task MoverConSimulacion(Mapa mapa, int destinoX, int destinoY)
+        {
+
+            while (X != destinoX || Y != destinoY)
+            {
+                if (X < destinoX) X++;
+                else if (X > destinoX) X--;
+
+                await Task.Delay(GetDelay());
+
+                if (Y < destinoY) Y++;
+                else if (Y > destinoY) Y--;
+
+                await Task.Delay(GetDelay());
+            }
+
+            mapa.MoverUnidad(this, destinoX, destinoY);
         }
         
-        if (X < destinoX)
+        protected virtual int GetDelay() //Metodo virtual que lo voy a llamar en cada clase que se pueda mover 
         {
-            X = X + 1;
+            return 500 - Velocidad * 10;
         }
-        else if (X > destinoX)
-        {
-            X = X - 1;
-        }
-        await Task.Delay(GetDelay());
-        if (Y < destinoY)
-        {
-            Y = Y + 1;
-        }
-        else if (Y > destinoY) 
-        {
-            Y = Y - 1; }
-        await Task.Delay(GetDelay());
 
-        ///necesito ayuda mvoerme en diagnola preguntar
-    }
-    protected virtual int GetDelay() //Metodo virtual que lo voy a llamar en cada clase que se pueda mover 
-    {
-        return 500 - Velocidad * 10;
-    }
+        public abstract Task RealizarAccion(); //Este metodo va a determinar la accion que tenga una unidad
+    
+        public Unidad (TipoUnidad tipo)
+    
+        {
+            Tipo = tipo;
+        }
+        public void MoverA(int nuevaX, int nuevaY)
+        
+        {
+            X = nuevaX;
+            Y = nuevaY;
+        }
+        public virtual async Task<int> Atacar(IAtacable objetivo)
+        {
+            int daño = Ataque;
 
-    public abstract Task RealizarAccion(); //Este metodo va a determinar la accion que tenga una unidad
+            if (objetivo is Unidad unidad)
+            {
+                if (Ventajas.TieneVentaja(this.Tipo, unidad.Tipo))
+                {
+                    daño += 20; 
+                }
+            }
+            else if (objetivo is Edificio)
+            {
+                daño = daño / 2; 
+            }
+            return await objetivo.RecibirDaño(daño);
+        }
+    }
 }

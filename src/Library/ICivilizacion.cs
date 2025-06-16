@@ -1,8 +1,10 @@
 using System.Security.Policy;
 
-namespace Library;
-public interface ICivilizacion
+namespace Library
 {
-    public string Nombre { get; set; }
-    public TipoUnidad UnidadEspecial { get; } 
+    public interface ICivilizacion
+    {
+        public string Nombre { get; set; }
+        public TipoUnidad UnidadEspecial { get; }
+    }
 }

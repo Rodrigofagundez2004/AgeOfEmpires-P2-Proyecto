@@ -1,7 +1,9 @@
-namespace Library;
-
-public interface IConstructor
+namespace Library
 {
-    Task Construir();
+
+    public interface IConstructor
+    {
+        Task Construir(int x, int y, Edificio estructura)
+    }
 }
 

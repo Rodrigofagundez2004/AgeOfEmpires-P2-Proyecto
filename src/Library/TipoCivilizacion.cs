@@ -1,8 +1,10 @@
-namespace Library;
-public enum TipoCivilizacion
+namespace Library
 {
-    Japoneses,
-    Romanos,
-    Vikingos
+    public enum TipoCivilizacion
+    {
+        Japoneses,
+        Romanos,
+        Vikingos
 
+    }
 }

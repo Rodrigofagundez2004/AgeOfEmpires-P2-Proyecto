@@ -1,11 +1,13 @@
-namespace Library;
-
-public enum TipoBonificacion
+namespace Library
 {
-    VelocidadRecoleccion,
-    CostoReducido,
-    AtaqueAumentado,
-    DefensaAumentada,
-    VelocidadConstruccion,
-    CapacidadPoblacion
+
+    public enum TipoBonificacion
+    {
+        VelocidadRecoleccion,
+        CostoReducido,
+        AtaqueAumentado,
+        DefensaAumentada,
+        VelocidadConstruccion,
+        CapacidadPoblacion
+    }
 }
