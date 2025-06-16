@@ -23,4 +23,13 @@ namespace Library
 
         }
     }
+    public class Jugador
+    {
+        public int CapacidadPoblacionMaxima = 10;
+        public int PoblacionActual = 0;
+        public bool PuedeCrearUnidad()
+        {
+            return PoblacionActual < CapacidadPoblacionMaxima;
+        }
+    }
 }

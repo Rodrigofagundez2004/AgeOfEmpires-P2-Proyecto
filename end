@@ -1,0 +1,21 @@
+[33m76e3f48[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mDevelops[m[33m)[m HEAD@{0}: commit: Arreglos de errores
+[33m9a9ed2f[m HEAD@{1}: commit: .
+[33ma948bc4[m HEAD@{2}: commit: .
+[33m56fe68d[m HEAD@{3}: commit: Almacenes
+[33m4ff163f[m HEAD@{4}: commit: Bosques-Generacion
+[33mdf2508e[m HEAD@{5}: commit: ...
+[33meaa0437[m HEAD@{6}: pull: Fast-forward
+[33mab7841a[m HEAD@{7}: commit: funciones nuevas
+[33m2347d42[m HEAD@{8}: pull: Fast-forward
+[33m8315b95[m HEAD@{9}: commit: celdas
+[33mc0957c2[m HEAD@{10}: commit: .
+[33m2215f0b[m HEAD@{11}: checkout: moving from main to Develops
+[33mfa1c9a5[m[33m ([m[1;32mmain[m[33m)[m HEAD@{12}: pull: Fast-forward
+[33ma247a03[m HEAD@{13}: checkout: moving from Develops to main
+[33m2215f0b[m HEAD@{14}: commit: Cambios
+[33m6b52722[m HEAD@{15}: commit: Centro civico, logica aldeano, y logica en interfaces
+[33m2b48e53[m HEAD@{16}: commit: cambios
+[33m5b6d618[m HEAD@{17}: commit: Cambios en estructura
+[33mbeb36dc[m[33m ([m[1;31morigin/Develops[m[33m)[m HEAD@{18}: checkout: moving from Develops to Develops
+[33mbeb36dc[m[33m ([m[1;31morigin/Develops[m[33m)[m HEAD@{19}: checkout: moving from main to Develops
+[33ma247a03[m HEAD@{20}: clone: from https://github.com/Rodrigofagundez2004/AgeOfEmpires-P2-Proyecto.git

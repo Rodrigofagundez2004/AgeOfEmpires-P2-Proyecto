@@ -12,8 +12,7 @@ namespace Library
         {
             this.VidaActual = 70;
             this.VidaMaxima = 70;
-            this.Defensa = 30;
-            this.Velocidad = 70;
+            this.Defensa = 30;s
             this.Ataque = 30;
         }
 
