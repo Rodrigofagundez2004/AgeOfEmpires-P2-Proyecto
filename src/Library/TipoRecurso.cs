@@ -1,6 +1,7 @@
 namespace Libray
 {
 
+
     public enum TipoRecurso
     {
         Madera,
@@ -8,4 +9,11 @@ namespace Libray
         Oro,
         Alimento
     }
+
+    Madera,
+    Alimento,
+    Oro,
+    Piedra
+       
+
 }
