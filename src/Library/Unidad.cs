@@ -61,5 +61,22 @@
             X = nuevaX;
             Y = nuevaY;
         }
+        public virtual async Task<int> Atacar(IAtacable objetivo)
+        {
+            int daño = Ataque;
+
+            if (objetivo is Unidad unidad)
+            {
+                if (Ventajas.TieneVentaja(this.Tipo, unidad.Tipo))
+                {
+                    daño += 20; 
+                }
+            }
+            else if (objetivo is Edificio)
+            {
+                daño = daño / 2; 
+            }
+            return await objetivo.RecibirDaño(daño);
+        }
     }
 }
