@@ -1,6 +1,7 @@
-﻿namespace Library
-{
+﻿using System.Threading.Tasks;
 
+namespace Library
+{
     public abstract class Unidad
     {
         public int X { get; protected set; }
@@ -11,15 +12,16 @@
         public int Ataque { get; set; }
         public int Defensa { get; set; }
         public int Velocidad { get; set; }
+
         protected Unidad(string nombre, int x, int y)
         {
             Nombre = nombre;
             X = x;
             Y = y;
         }
+
         public async Task MoverConSimulacion(Mapa mapa, int destinoX, int destinoY)
         {
-
             while (X != destinoX || Y != destinoY)
             {
                 if (X < destinoX) X++;
@@ -36,13 +38,11 @@
             mapa.MoverUnidad(this, destinoX, destinoY);
         }
 
-       
-    }
-    protected virtual int GetDelay() //Metodo virtual que lo voy a llamar en cada clase que se pueda mover 
+        protected virtual int GetDelay()
         {
             return 500 - Velocidad * 10;
         }
 
-        public abstract Task RealizarAccion(); //Este metodo va a determinar la accion que tenga una unidad
+        public abstract Task RealizarAccion();
     }
 }

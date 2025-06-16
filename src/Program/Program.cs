@@ -1,21 +1,29 @@
-﻿namespace Program;
+﻿using System;
+using Library;
 
-class Program
+namespace Program
 {
-    static void Main(string[] args)
+    class Program
     {
-        CentroCivico miCentro = new CentroCivico();
-
-        JuegoFacade fachada = new JuegoFacade(); // si lo tenés
-        Mapa mapa = new Mapa(100, 100);
-        mapa.Mostrar(); // Mostrará un tablero de 100x100 con puntos
-        Console.ReadLine();
-        Console.WriteLine("1. Ver aldeanos en el Centro Cívico");
-
-        string opcion = Console.ReadLine();
-        if (opcion == "1")
+        static void Main(string[] args)
         {
-            MostrarAldeanosDelCentro(miCentro);
+            JuegoFacade fachada = new JuegoFacade(); // crea mapa, jugador, centro cívico y muestra aldeanos
+            Console.WriteLine("\n--- Menú Principal ---");
+            Console.WriteLine("1. Ver aldeanos en el Centro Cívico");
+            Console.WriteLine("2. Ver estado del juego");
+
+            string opcion = Console.ReadLine();
+            if (opcion == "1")
+            {
+                fachada.MostrarAldeanos(); // nuevo método público en JuegoFacade
+            }
+            else if (opcion == "2")
+            {
+                fachada.MostrarEstado();
+            }
+
+            Console.WriteLine("Presiona cualquier tecla para salir...");
+            Console.ReadKey();
         }
     }
 }

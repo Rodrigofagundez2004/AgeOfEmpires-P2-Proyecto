@@ -7,8 +7,8 @@ namespace Library
     public class Aldeano : Unidad, IRecolector, IAtacable, IConstructor, IAtacante
     {
         public double VelocidadDeRecoleccion { get; set; } = 1.0;
-        public Aldeano(string nombre, int x, int y, int vidaMaxima, int vidaActual, int defensa, int velocidad, int ataque)
-            : base(nombre, x, y)
+
+        public Aldeano(string nombre = "Aldeano", int x = 0, int y = 0) : base(nombre, x, y)
         {
             this.VidaActual = 70;
             this.VidaMaxima = 70;
@@ -27,45 +27,59 @@ namespace Library
             if (VidaActual < 0)
                 VidaActual = 0;
 
-            await Task.Delay(200); 
-
+            await Task.Delay(200);
             return VidaActual;
         }
+
         public virtual async Task<int> Atacar(IAtacable objetivo)
         {
             return await objetivo.RecibirDaño(Ataque);
-
         }
 
-        public virtual async Task Construir(int x , int y, Edificio estructura, Mapa mapa)
+        public virtual async Task Construir(int x, int y, Edificio estructura, Mapa mapa)
         {
-            var celda = mapa.ObtenerCelda(x ,y);
-            if (celda.EstaOcupada)
+            try
             {
-                throw new InvalidOperationException("No podes construir una estructura aqui, ya que esta ocupada");
-                mapa.PosicionarUnidad(estructura ,x ,y);
-                await Task.Delay(20000);  // tiempo estipulado para construir
+
+                var celda = mapa.ObtenerCelda(x, y);
+                if (celda.EstaOcupada)
+                {
+                    throw new InvalidOperationException("No puedes construir una estructura aquí, ya que está ocupada");
+                }
+
+                mapa.PosicionarEdificio(estructura, x, y);
+                await Task.Delay(20000); // tiempo estipulado para construir
             }
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine($"Error al construir: {ex.Message}");
+            }
+
         }
+
         protected override int GetDelay()
         {
             return 500 - Velocidad * 15;
         }
+
         public virtual async Task Recolectar(IRecursos fuente, IAlmacenes almacen)
         {
             if (fuente.EstaAgotado) return;
+
             int cantidadRecolectada = (int)(VelocidadDeRecoleccion * fuente.VelocidadDeRecoleccion * 10);
-            if (fuente.CantidadDisponble < cantidadRecolectada)
+            if (fuente.CantidadDisponible < cantidadRecolectada)
             {
                 cantidadRecolectada = fuente.CantidadDisponible;
             }
+
+            fuente.CantidadDisponible -= cantidadRecolectada;
             await Task.Delay(200);
-            await almacen.Guardar(recurso.Tipo, cantidadRecolectada);
+            await almacen.Guardar(fuente.Tipo, cantidadRecolectada);
             await Task.Delay(1000);
         }
+
         public override Task RealizarAccion()
         {
-            //logica que aun estoy por ver 
             return Task.CompletedTask;
         }
     }

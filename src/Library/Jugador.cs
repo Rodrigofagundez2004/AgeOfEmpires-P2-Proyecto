@@ -7,10 +7,12 @@ namespace Library
     {
         public Dictionary<TipoRecurso, IRecursos> Recursos { get; private set; }
         public List<Unidad> Unidades { get; private set; }
+        public List<Edificio> Edificios { get; private set; }
 
         public Jugador()
         {
             Unidades = new List<Unidad>();
+            Edificios = new List<Edificio>();
             Recursos = new Dictionary<TipoRecurso, IRecursos>
         {
             { TipoRecurso.Madera, new RecursoMadera(100) },

@@ -1,5 +1,6 @@
 using System;
-Add commentMore actions
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Library
 {
@@ -21,10 +22,11 @@ namespace Library
                 }
             }
         }
+
         public Celda ObtenerCelda(int x, int y)
         {
             if (x < 0 || y < 0 || x >= Tamaño || y >= Tamaño)
-                throw new ArgumentOutOfRangeException("te saliste del mapa");
+                throw new ArgumentOutOfRangeException("Te saliste del mapa");
 
             return Celdas[x, y];
         }
@@ -33,46 +35,53 @@ namespace Library
         {
             var celda = ObtenerCelda(x, y);
             if (celda.EstaOcupada)
-                throw new Exception("La celda ya esta ocupada");
+                throw new Exception("La celda ya está ocupada");
 
             celda.UnidadOcupante = unidad;
-            unidad.Posicionar(x, y); //metodo q solamente atualiza
+            unidad.Posicionar(x, y); // método que solamente actualiza
         }
+
         public void MoverUnidad(Unidad unidad, int destinoX, int destinoY)
         {
             var origen = ObtenerCelda(unidad.X, unidad.Y);
             var destino = ObtenerCelda(destinoX, destinoY);
 
             if (destino.EstaOcupada)
-                throw new Exception("No se puede mover destino ocupado");
+                throw new Exception("No se puede mover, destino ocupado");
 
             origen.UnidadOcupante = null;
             destino.UnidadOcupante = unidad;
             unidad.Posicionar(destinoX, destinoY);
         }
+
         public void LiberarCelda(int x, int y)
         {
             var celda = ObtenerCelda(x, y);
             celda.UnidadOcupante = null;
         }
+
         public void MostrarMapa()
         {
             for (int y = 0; y < Tamaño; y++)
             {
                 for (int x = 0; x < Tamaño; x++)
                 {
-                    Console.Write(Celdas[x, y].EstaOcupada ? "X " : ". ");
-                    if (Celdas[x, y].EstaOcupada) Console.Write("X ");
-                    else if (Bosques[x, y]) Console.Write("B ");
-                    else Console.Write(". ");
+                    if (Celdas[x, y].EstaOcupada)
+                        Console.Write("X ");
+                    else if (Bosques[x, y])
+                        Console.Write("B ");
+                    else
+                        Console.Write(". ");
                 }
                 Console.WriteLine();
             }
         }
+
         public bool EsCeldaValida(int x, int y)
         {
             return x >= 0 && y >= 0 && x < Tamaño && y < Tamaño;
         }
+
         public void GenerarBosques(int cantidad)
         {
             var libres = new List<(int x, int y)>();
@@ -92,6 +101,7 @@ namespace Library
                 Bosques[x, y] = true;
             }
         }
+
         public bool EsBosque(int x, int y)
         {
             return EsCeldaValida(x, y) && Bosques[x, y];

@@ -12,9 +12,9 @@ namespace Library
         {
             AldeanosDentro = new List<Aldeano>();
             //Starteas con 3 aldeanos por defeccto
-            for (int i = 0; i < 3;)
+            for (int i = 0; i < 3; i++)
             {
-                AldeanosDentro.Add(new Aldeano());
+                AldeanosDentro.Add(new Aldeano($"Aldeano {i + 1}"));
             }
 
         }

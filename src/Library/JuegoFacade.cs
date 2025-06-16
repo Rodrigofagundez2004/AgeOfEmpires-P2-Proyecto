@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Management.Instrumentation;
 
 namespace Library
 {
@@ -12,6 +11,9 @@ namespace Library
         {
             var mapa = new Mapa();
             centroCivico = new CentroCivico();
+            jugador = new Jugador();
+            mapa.PosicionarEdificio(centroCivico, 0, 0);
+            jugador.Edificios.Add(centroCivico);
             //logica para posicioanr edificio en el lugar 00 
 
 
@@ -36,6 +38,16 @@ namespace Library
                 Console.WriteLine($"- {a.Nombre} / Vida: {a.VidaActual}");
             }
         }
-        
+        public void MostrarEstado()
+        {
+            Console.WriteLine("\n=== ESTADO DEL JUEGO ===");
+            Console.WriteLine($"Recursos del jugador:");
+            foreach (var kvp in jugador.Recursos)
+            {
+                Console.WriteLine($"- {kvp.Key}: {kvp.Value.CantidadDisponible}");
+            }
+            Console.WriteLine($"Unidades: {jugador.Unidades.Count}");
+            Console.WriteLine($"Edificios: {jugador.Edificios.Count}");
+        }
     }
 }

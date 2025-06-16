@@ -5,28 +5,41 @@ namespace Library
 {
     public class AlmacenMadera : IAlmacenes
     {
-        public string Name { get; set; } = "Almacen De Madera"
+        public string Name { get; set; } = "Almacen De Madera";
         public int CapacidadActual { get; set; } = 0;
         public int CapacidadMaxima { get; set; } = 1000;
 
 
         public async Task<string> Guardar(TipoRecurso tipo, int cantidad)
         {
-            if (tipo != TipoRecurso.Madera)
+            try
             {
-                throw new ArgumentException("Este almacen solo admite madera")
+                if (tipo != TipoRecurso.Madera)
+                {
+                    throw new ArgumentException("Este almacen solo admite madera");
+                }
+                if (CapacidadActual >= CapacidadMaxima)
+                {
+                    return "⚠️ El almacén ya está lleno. No se puede guardar más.";
+                }
+                if (CapacidadActual + cantidad > CapacidadMaxima)
+                {
+                    cantidad = CapacidadMaxima - CapacidadActual;
+                }
+                CapacidadActual += cantidad;
+                await Task.Delay(400);
+                return $"🥖 Guardados {cantidad} de madera. Total: {CapacidadActual}/{CapacidadMaxima}";
             }
-            if (CapacidadActual >= CapacidadMaxima)
+            catch (ArgumentOutOfRangeException ex)
             {
-                return "⚠️ El almacén ya está lleno. No se puede guardar más.";
+                Console.WriteLine($"Error al guardar: {ex.Message}");
+                return $"❌ Error: {ex.Message}";
             }
-            if (CapacidadActual + cantidad > CapacidadMaxima)
+            catch (Exception ex)
             {
-                cantidad = CapacidadMaxima Maxima - CapacidadActual
+                Console.WriteLine($"Error inesperado: {ex.Message}");
+                return "❌ Ha ocurrido un error inesperado al guardar el recurso.";
             }
-            CapacidadActual += cantidad;
-            awiat Task.Delay(400);
-            return $"🥖 Guardados {cantidad} de madera. Total: {CapacidadActual}/{CapacidadMaxima}";
 
 
         }

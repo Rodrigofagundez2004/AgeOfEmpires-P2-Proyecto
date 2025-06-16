@@ -5,7 +5,7 @@ namespace Library
 
     public class Recursos : IRecursos
     {
-        public double VelocidadDeRecoleccion { get; private set;´}
+        public double VelocidadDeRecoleccion { get; private set; }
         public int CantidadDisponible { get; set; }
         public TipoRecurso Tipo { get; private set; }
         public bool EstaAgotado => CantidadDisponible <= 0;
