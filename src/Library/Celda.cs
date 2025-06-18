@@ -2,21 +2,12 @@ namespace Library
 {
     public class Celda
     {
-        public int X { get; set; }
-        public int Y { get; set; }
-
-        public Unidad UnidadOcupante { get; set; }
-
-        public bool EstaOcupada
-        {
-            get { return UnidadOcupante != null; }
-        }
-        public Celda(int x, int y)
-        {
-            X = x;
-            Y = y;
-            UnidadOcupante = null;
-        }
+        public int X { get; }
+        public int Y { get; }
+        public Unidad? UnidadOcupante { get; set; }
+        public Edificio? Edificio { get; set; }
+        public bool EstaOcupada => UnidadOcupante != null || Edificio != null;
+        public Celda(int x, int y) { X = x; Y = y; }
     }
-    
+
 }

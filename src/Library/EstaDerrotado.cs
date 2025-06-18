@@ -1,14 +1,21 @@
+using System.Collections.Generic;
+
 namespace Library
 {
-    public bool EstaDerrotada(List<Edificio> edificios)
+    public static class UtilidadesJuego
     {
-        foreach (var edificio in edificios)
+        public static bool EstaDerrotada(List<Edificio> edificios)
         {
-            if (edificio.Tipo == TipoEdificio.CentroCivico && edificio.VidaActual > 0)
+            foreach (var edificio in edificios)
             {
-                return false;
+                
+                if (edificio is CentroCivico centro && centro.VidaActual > 0)
+                {
+                    return false;
+                }
             }
+            
+            return true;
         }
-        return true;
     }
 }

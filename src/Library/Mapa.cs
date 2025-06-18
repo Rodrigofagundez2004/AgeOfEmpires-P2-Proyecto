@@ -31,6 +31,33 @@ namespace Library
             return Celdas[x, y];
         }
 
+
+        public void PosicionarEdificio(Edificio edificio, int x, int y)
+        {
+            try
+            {
+                var celda = ObtenerCelda(x, y);
+
+                if (celda.EstaOcupada)
+                    throw new InvalidOperationException("La celda ya está ocupada por otra unidad o edificio.");
+
+                celda.Edificio = edificio;
+
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                Console.WriteLine($"[ERROR - Coordenadas inválidas] {ex.Message}");
+            }
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine($"[ERROR - Construcción no permitida] {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[ERROR - General] {ex.Message}");
+            }
+        }
+
         public void PosicionarUnidad(Unidad unidad, int x, int y)
         {
             var celda = ObtenerCelda(x, y);
@@ -38,7 +65,7 @@ namespace Library
                 throw new Exception("La celda ya está ocupada");
 
             celda.UnidadOcupante = unidad;
-            unidad.Posicionar(x, y); // método que solamente actualiza
+            unidad.MoverA(x, y);
         }
 
         public void MoverUnidad(Unidad unidad, int destinoX, int destinoY)
@@ -51,13 +78,14 @@ namespace Library
 
             origen.UnidadOcupante = null;
             destino.UnidadOcupante = unidad;
-            unidad.Posicionar(destinoX, destinoY);
+            unidad.MoverA(destinoX, destinoY);
         }
 
         public void LiberarCelda(int x, int y)
         {
             var celda = ObtenerCelda(x, y);
             celda.UnidadOcupante = null;
+            celda.Edificio = null;
         }
 
         public void MostrarMapa()
@@ -78,33 +106,22 @@ namespace Library
         }
 
         public bool EsCeldaValida(int x, int y)
-        {
-            return x >= 0 && y >= 0 && x < Tamaño && y < Tamaño;
-        }
+            => x >= 0 && y >= 0 && x < Tamaño && y < Tamaño;
 
         public void GenerarBosques(int cantidad)
         {
             var libres = new List<(int x, int y)>();
-
-            for (int x = 0; x < Tamaño; x++)
-            {
-                for (int y = 0; y < Tamaño; y++)
-                {
-                    if (!Celdas[x, y].EstaOcupada && !Bosques[x, y])
-                        libres.Add((x, y));
-                }
-            }
+            for (int xx = 0; xx < Tamaño; xx++)
+                for (int yy = 0; yy < Tamaño; yy++)
+                    if (!Celdas[xx, yy].EstaOcupada && !Bosques[xx, yy])
+                        libres.Add((xx, yy));
 
             var rnd = new Random();
-            foreach (var (x, y) in libres.OrderBy(_ => rnd.Next()).Take(cantidad))
-            {
-                Bosques[x, y] = true;
-            }
+            foreach (var (cx, cy) in libres.OrderBy(_ => rnd.Next()).Take(cantidad))
+                Bosques[cx, cy] = true;
         }
 
         public bool EsBosque(int x, int y)
-        {
-            return EsCeldaValida(x, y) && Bosques[x, y];
-        }
+            => EsCeldaValida(x, y) && Bosques[x, y];
     }
 }

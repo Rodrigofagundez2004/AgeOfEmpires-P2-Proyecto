@@ -1,8 +1,5 @@
-using System;
-
 namespace Library
 {
-
     public class Recursos : IRecursos
     {
         public double VelocidadDeRecoleccion { get; private set; }
@@ -10,17 +7,18 @@ namespace Library
         public TipoRecurso Tipo { get; private set; }
         public bool EstaAgotado => CantidadDisponible <= 0;
 
-        public Recursos(TipoRecurso Tipo, int cantidadInicial)
+        public Recursos(TipoRecurso tipo, int cantidadInicial)
         {
-            Tipo = Tipo;
+            Tipo = tipo;                       // this.Tipo = tipo
             CantidadDisponible = cantidadInicial;
-            if (Tipo == TipoRecurso.Madera)
+
+            if (tipo == TipoRecurso.Madera)
                 VelocidadDeRecoleccion = 1.5;
-            else if (Tipo == TipoRecurso.Oro)
+            else if (tipo == TipoRecurso.Oro)
                 VelocidadDeRecoleccion = 0.7;
-            else if (Tipo == TipoRecurso.Piedra)
+            else if (tipo == TipoRecurso.Piedra)
                 VelocidadDeRecoleccion = 1.0;
-            else if (Tipo == TipoRecurso.Alimento)
+            else if (tipo == TipoRecurso.Alimento)
                 VelocidadDeRecoleccion = 1.5;
             else
                 VelocidadDeRecoleccion = 1.0;

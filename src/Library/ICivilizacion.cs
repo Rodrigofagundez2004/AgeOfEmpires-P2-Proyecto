@@ -4,7 +4,7 @@ namespace Library
 {
     public interface ICivilizacion
     {
-        public string Nombre { get; set; }
+        string Nombre { get; } 
         public TipoUnidad UnidadEspecial { get; }
     }
 }

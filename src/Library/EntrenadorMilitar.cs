@@ -1,15 +1,19 @@
-public class EntrenadorMilitar
+namespace Library
 {
-    public int ComidaDisponible;
+    public class EntrenadorMilitar
 
-    public bool EntrenarUnidad(Unidad unidad)
     {
-        if (ComidaDisponible >= unidad.CostoComida)
+        public int ComidaDisponible;
+
+        public bool EntrenarUnidad(Unidad unidad)
         {
-            ComidaDisponible -= unidad.CostoComida;
-            
-            return true;
+            if (ComidaDisponible >= unidad.CostoComida)
+            {
+                ComidaDisponible -= unidad.CostoComida;
+
+                return true;
+            }
+            return false;
         }
-        return false;
     }
 }

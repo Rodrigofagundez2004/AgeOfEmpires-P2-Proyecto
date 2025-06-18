@@ -1,24 +1,25 @@
-using System;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace Library
 {
     public class Samurai : Unidad, ICivilizacion, IAtacable, IAtacante
     {
-        public string NombreCivilizacion => "Japoneses";
+        string ICivilizacion.Nombre => "Japoneses";  
+
         public TipoUnidad UnidadEspecial => TipoUnidad.Samurai;
 
-        public Samurai(string nombre = "Samurai", int x = 0, int y = 0) : base(nombre, x, y)
+        public Samurai(string nombre = "Samurai", int x = 0, int y = 0)
+            : base(nombre, x, y, costoComida: 85, tiempoSegundos: 7)
         {
             this.VidaActual = 125;
             this.VidaMaxima = 125;
             this.Defensa = 100;
             this.Velocidad = 70;
             this.Ataque = 80;
+            this.Tipo = TipoUnidad.Samurai;
         }
 
-        public virtual async Task<int> RecibirDaño(int daño)
+        public override async Task<int> RecibirDaño(int daño)
         {
             int dañoEfectivo = daño - Defensa;
             if (dañoEfectivo < 0)
@@ -32,7 +33,7 @@ namespace Library
             return VidaActual;
         }
 
-        public virtual async Task<int> Atacar(IAtacable objetivo)
+        public override async Task<int> Atacar(IAtacable objetivo)
         {
             return await objetivo.RecibirDaño(Ataque);
         }
@@ -47,5 +48,4 @@ namespace Library
             return Task.CompletedTask;
         }
     }
-
 }

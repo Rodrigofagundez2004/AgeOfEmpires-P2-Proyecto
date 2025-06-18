@@ -1,3 +1,4 @@
+// JuegoFacade.cs
 using System;
 using System.Collections.Generic;
 
@@ -5,114 +6,90 @@ namespace Library
 {
     public class JuegoFacade
     {
-        private CentroCivico centroCivico;
+        private readonly Mapa mapa;
+        private readonly CentroCivico centroCivico;
+        private readonly Jugador jugador1;
 
         public JuegoFacade()
         {
-            var mapa = new Mapa();
-            centroCivico = new CentroCivico();
-            jugador = new Jugador();
+            mapa = new Mapa();
+            centroCivico = new CentroCivico(0, 0);
+            jugador1 = new Jugador();
+
             mapa.PosicionarEdificio(centroCivico, 0, 0);
-            jugador.Edificios.Add(centroCivico);
-            //logica para posicioanr edificio en el lugar 00 
+            jugador1.Edificios.Add(centroCivico);
 
+            // Crear y colocar 3 aldeanos de ejemplo
+            for (int i = 0; i < 3; i++)
+            {
+                var a = new Aldeano(x: i + 1, y: 0);
+                centroCivico.AgregarAldeano(a);
+                jugador1.Unidades.Add(a);
+                mapa.PosicionarUnidad(a, i + 1, 0);
+            }
 
-            Console.WriteLine("Has empezado el Juego, con 3 aldeanos y 1 Centro C�vico");
-
+            Console.WriteLine("Has empezado el juego con 3 aldeanos y 1 Centro Cívico.");
             MostrarAldeanosDelCentro();
         }
 
-        private void MostrarAldeanosDelCentro()
+        public void MostrarAldeanos()
         {
-            IReadOnlyList<Aldeano> aldeanos = centroCivico.ObtenerAldeanos();
-
-            if (aldeanos.Count == 0) 
+            var aldeanos = centroCivico.ObtenerAldeanos();
+            if (aldeanos.Count == 0)
             {
-                Console.WriteLine("No hay aldeanos en el Centro C�vico.");
+                Console.WriteLine("No hay aldeanos en el Centro Cívico.");
                 return;
             }
 
-            Console.WriteLine("Aldeanos en el Centro C�vico:");
-            foreach (Aldeano a in aldeanos)
-            {
+            Console.WriteLine("Aldeanos en el Centro Cívico:");
+            foreach (var a in aldeanos)
                 Console.WriteLine($"- {a.Nombre} / Vida: {a.VidaActual}");
-            }
         }
-<<<<<<< HEAD
+
         public void MostrarEstado()
         {
             Console.WriteLine("\n=== ESTADO DEL JUEGO ===");
-            Console.WriteLine($"Recursos del jugador:");
-            foreach (var kvp in jugador.Recursos)
-            {
+            Console.WriteLine("Recursos del jugador:");
+            foreach (var kvp in jugador1.Recursos)
                 Console.WriteLine($"- {kvp.Key}: {kvp.Value.CantidadDisponible}");
-            }
-            Console.WriteLine($"Unidades: {jugador.Unidades.Count}");
-            Console.WriteLine($"Edificios: {jugador.Edificios.Count}");
+            Console.WriteLine($"Unidades: {jugador1.Unidades.Count}");
+            Console.WriteLine($"Edificios: {jugador1.Edificios.Count}");
         }
-=======
-        
+
         public void ElegirCivilizacion()
         {
-            Console.WriteLine("Elegí tu civilización:");
+            Console.WriteLine("\nElegí tu civilización:");
             Console.WriteLine("1. Japoneses");
             Console.WriteLine("2. Romanos");
             Console.WriteLine("3. Vikingos");
-
             string opcion = Console.ReadLine();
 
-            List<Bonificacion> bonificaciones = new List<Bonificacion>(); 
-            
-            if (opcion == "1")
+            List<Bonificacion> bonificaciones = opcion switch
             {
-                Console.WriteLine("Elegiste Japoneses.");
-                Unidad samurai = new Samurai("Samurai", 10, 10, 125, 125, 100, 70, 80);
-                bonificaciones = new List<Bonificacion>
-                {
+                "1" => new() {
                     new Bonificacion(TipoBonificacion.AtaqueAumentado, "Velocidad de ataque +25%", 1.25),
                     new Bonificacion(TipoBonificacion.VelocidadRecoleccion, "Oro se recolecta más rápido", 1.2)
-                };
-                Console.WriteLine("Unidad creada: " + samurai.Nombre);
-            }
-            else if (opcion == "2")
-            {
-                Console.WriteLine("Elegiste Romanos.");
-                Unidad legionario = new Legionario("Legionario", 10, 10, 110, 110, 90, 60, 80);
-                bonificaciones = new List<Bonificacion>
-                {
+                },
+                "2" => new() {
                     new Bonificacion(TipoBonificacion.DefensaAumentada, "Defensa mejorada +20%", 1.2),
                     new Bonificacion(TipoBonificacion.CostoReducido, "Unidades cuestan menos", 0.9)
-                };
-                Console.WriteLine("Unidad creada: " + legionario.Nombre);
-            }
-            else if (opcion == "3")
-            {
-                Console.WriteLine("Elegiste Vikingos.");
-                Unidad berserker = new Berserker ("Vikingos", 10, 10, 130, 130, 85, 65, 90);
-                bonificaciones = new List<Bonificacion>
-                {
+                },
+                "3" => new() {
                     new Bonificacion(TipoBonificacion.VelocidadConstruccion, "Construye más rápido +20%", 1.2),
                     new Bonificacion(TipoBonificacion.CapacidadPoblacion, "Vida aumentada +30%", 1.3)
-                };
-                Console.WriteLine("Unidad creada: " + berserker.Nombre);
-            }
-            else
-            {
-                Console.WriteLine("Opción no válida.");
-            }
-            Console.WriteLine("Bonificaciones:");
+                },
+                _ => new()
+            };
 
+            Console.WriteLine("Bonificaciones:");
             foreach (var b in bonificaciones)
-            {
-                Console.WriteLine("- " + b.Descripcion);
-            }
+                Console.WriteLine($"- {b.Descripcion}");
         }
-        public void MoverUnidades(List<Unidad> unidades, int nuevax, int nuevay)
+
+        public void MoverUnidades(List<Unidad> unidades, int nuevaX, int nuevaY)
         {
             foreach (var u in unidades)
-                u.MoverA(nuevax, nuevay);
-        }    
->>>>>>> 8c986005d0e7145c1f4ed7a19dbd5dedd069e1c0
+                mapa.MoverUnidad(u, nuevaX, nuevaY);
+        }
     }
 }
-

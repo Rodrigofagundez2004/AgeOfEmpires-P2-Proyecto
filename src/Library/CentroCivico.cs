@@ -2,39 +2,20 @@ using System.Collections.Generic;
 
 namespace Library
 {
-
     public class CentroCivico : Edificio
     {
-        public int CapacidadMaxima { get; set; } = 10;
-        private List<Aldeano> AldeanosDentro { get; set; }
-        public CentroCivico()
-            : base(vidaMaxima: 3500, vidaActual: 3500, name: "CentroCivico")
-        {
-            AldeanosDentro = new List<Aldeano>();
-            //Starteas con 3 aldeanos por defeccto
-            for (int i = 0; i < 3; i++)
-            {
-                AldeanosDentro.Add(new Aldeano($"Aldeano {i + 1}"));
-            }
+        private readonly List<Aldeano> aldeanos = new();
 
-        }
-        public bool AgregarAldeano(Aldeano aldeano)
+        public CentroCivico(int x = 0, int y = 0)
+            : base(vidaMaxima: 1500,
+                   vidaActual: 1500,
+                   name: "Centro Cívico",
+                   x: x,
+                   y: y)
         {
-            if (AldeanosDentro.Count < CapacidadMaxima)
-            {
-                AldeanosDentro.Add(aldeano);
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-
-        }
-        public IReadOnlyList<Aldeano> ObtenerAldeanos()
-        {
-            return AldeanosDentro.AsReadOnly();  //es una version de solo lectura de la lista, nadie puede modificarlo desde afuera, pero si hay acceso
         }
 
+        public void AgregarAldeano(Aldeano a) => aldeanos.Add(a);
+        public IReadOnlyList<Aldeano> ObtenerAldeanos() => aldeanos;
     }
 }

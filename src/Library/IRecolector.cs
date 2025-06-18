@@ -7,6 +7,4 @@ namespace Library
         Task Recolectar(IRecursos fuente, IAlmacenes almacen);
     }
 
-    Task <int> Recolectar(Irecursos recurso);
-
 }

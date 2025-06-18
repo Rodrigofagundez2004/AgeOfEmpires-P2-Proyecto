@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace Library
@@ -8,15 +7,18 @@ namespace Library
     {
         public double VelocidadDeRecoleccion { get; set; } = 1.0;
 
-        public Aldeano(string nombre = "Aldeano", int x = 0, int y = 0) : base(nombre, x, y)
+        public Aldeano(string nombre = "Aldeano", int x = 0, int y = 0)
+            : base(nombre, x, y, costoComida: 30, tiempoSegundos: 4)
         {
             this.VidaActual = 70;
             this.VidaMaxima = 70;
-            this.Defensa = 30;s
+            this.Defensa = 30;
+            this.Velocidad = 50;
             this.Ataque = 30;
+            this.Tipo = TipoUnidad.Aldeano; // Asegurate de tener este valor en tu enum
         }
 
-        public virtual async Task<int> RecibirDaño(int daño)
+        public override async Task<int> RecibirDaño(int daño)
         {
             int dañoEfectivo = daño - Defensa;
             if (dañoEfectivo < 0)
@@ -30,30 +32,15 @@ namespace Library
             return VidaActual;
         }
 
-        public virtual async Task<int> Atacar(IAtacable objetivo)
+        public override async Task<int> Atacar(IAtacable objetivo)
         {
             return await objetivo.RecibirDaño(Ataque);
         }
 
-        public virtual async Task Construir(int x, int y, Edificio estructura, Mapa mapa)
+        public async Task Construir(int x, int y, Edificio estructura, Mapa mapa)
         {
-            try
-            {
-
-                var celda = mapa.ObtenerCelda(x, y);
-                if (celda.EstaOcupada)
-                {
-                    throw new InvalidOperationException("No puedes construir una estructura aquí, ya que está ocupada");
-                }
-
-                mapa.PosicionarEdificio(estructura, x, y);
-                await Task.Delay(20000); // tiempo estipulado para construir
-            }
-            catch (InvalidOperationException ex)
-            {
-                Console.WriteLine($"Error al construir: {ex.Message}");
-            }
-
+            mapa.PosicionarEdificio(estructura, x, y);
+            await Task.Delay(20000); // Simula tiempo de construcción
         }
 
         protected override int GetDelay()
@@ -61,7 +48,7 @@ namespace Library
             return 500 - Velocidad * 15;
         }
 
-        public virtual async Task Recolectar(IRecursos fuente, IAlmacenes almacen)
+        public async Task Recolectar(IRecursos fuente, IAlmacenes almacen)
         {
             if (fuente.EstaAgotado) return;
 

@@ -4,16 +4,18 @@ namespace Library
 {
     public class Caballeria : Unidad, IAtacante, IAtacable
     {
-        public Caballeria(string nombre = "Caballería", int x = 0, int y = 0) : base(nombre, x, y)
+        public Caballeria(string nombre = "Caballería", int x = 0, int y = 0)
+            : base(nombre, x, y, costoComida: 80, tiempoSegundos: 6)
         {
             this.VidaActual = 100;
             this.VidaMaxima = 100;
             this.Defensa = 60;
             this.Velocidad = 100;
             this.Ataque = 60;
+            this.Tipo = TipoUnidad.Caballeria;
         }
 
-        public virtual async Task<int> RecibirDaño(int daño)
+        public override async Task<int> RecibirDaño(int daño)
         {
             int dañoEfectivo = daño - Defensa;
             if (dañoEfectivo < 0)
@@ -27,7 +29,7 @@ namespace Library
             return VidaActual;
         }
 
-        public virtual async Task<int> Atacar(IAtacable objetivo)
+        public override async Task<int> Atacar(IAtacable objetivo)
         {
             return await objetivo.RecibirDaño(Ataque);
         }
