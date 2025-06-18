@@ -12,6 +12,8 @@ namespace Program
             Console.WriteLine("\n--- Menú Principal ---");
             Console.WriteLine("1. Ver aldeanos en el Centro Cívico");
             Console.WriteLine("2. Ver estado del juego");
+            Console.WriteLine("3. Ver el mapa ");
+            
 
             string opcion = Console.ReadLine();
             if (opcion == "1")
@@ -21,6 +23,10 @@ namespace Program
             else if (opcion == "2")
             {
                 fachada.MostrarEstado();
+            }
+            else if (opcion == "3")
+            {
+                fachada.MostrarMapa();
             }
             else
             {

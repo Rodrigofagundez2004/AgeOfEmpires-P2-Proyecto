@@ -1,4 +1,4 @@
-// JuegoFacade.cs
+
 using System;
 using System.Collections.Generic;
 
@@ -13,6 +13,8 @@ namespace Library
         public JuegoFacade()
         {
             mapa = new Mapa();
+            mapa.GenerarBosques(20);
+            mapa.GenerarMinas(20);
             centroCivico = new CentroCivico(0, 0);
             jugador1 = new Jugador();
 
@@ -29,7 +31,7 @@ namespace Library
             }
 
             Console.WriteLine("Has empezado el juego con 3 aldeanos y 1 Centro Cívico.");
-            MostrarAldeanosDelCentro();
+            MostrarAldeanos();
         }
 
         public void MostrarAldeanos()
@@ -54,6 +56,10 @@ namespace Library
                 Console.WriteLine($"- {kvp.Key}: {kvp.Value.CantidadDisponible}");
             Console.WriteLine($"Unidades: {jugador1.Unidades.Count}");
             Console.WriteLine($"Edificios: {jugador1.Edificios.Count}");
+        }
+        public void MostrarMapa()
+        {
+            mapa.MostrarMapa();
         }
 
         public void ElegirCivilizacion()

@@ -15,7 +15,7 @@ namespace Library
             this.Defensa = 30;
             this.Velocidad = 50;
             this.Ataque = 30;
-            this.Tipo = TipoUnidad.Aldeano; // Asegurate de tener este valor en tu enum
+            this.Tipo = TipoUnidad.Aldeano;
         }
 
         public override async Task<int> RecibirDaño(int daño)

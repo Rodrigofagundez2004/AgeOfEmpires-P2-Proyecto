@@ -9,11 +9,13 @@ namespace Library
         public const int Tamaño = 100;
         public Celda[,] Celdas { get; private set; }
         private bool[,] Bosques;
+        private bool[,] Minas;
 
         public Mapa()
         {
             Celdas = new Celda[Tamaño, Tamaño];
             Bosques = new bool[Tamaño, Tamaño];
+            Minas = new bool[Tamaño, Tamaño];
             for (int x = 0; x < Tamaño; x++)
             {
                 for (int y = 0; y < Tamaño; y++)
@@ -98,6 +100,8 @@ namespace Library
                         Console.Write("X ");
                     else if (Bosques[x, y])
                         Console.Write("B ");
+                    else if (Minas[x, y])
+                        Console.Write("M ");
                     else
                         Console.Write(". ");
                 }
@@ -107,6 +111,21 @@ namespace Library
 
         public bool EsCeldaValida(int x, int y)
             => x >= 0 && y >= 0 && x < Tamaño && y < Tamaño;
+
+        public void GenerarMinas(int cantidad)
+        {
+            var libres = new List<(int x, int y)>();
+            for (int xx = 0; xx < Tamaño; xx++)
+                for (int yy = 0; yy < Tamaño; yy++)
+                    if (!Celdas[xx, yy].EstaOcupada && !Minas[xx, yy])
+                        libres.Add((xx, yy));
+            var rnd = new Random();
+            foreach (var (cx, cy) in libres.OrderBy(_ => rnd.Next()).Take(cantidad))
+                Minas[cx, cy] = true;
+        }
+        public bool EsMina(int x, int y)
+            => EsCeldaValida(x, y) && Bosques[x, y];
+
 
         public void GenerarBosques(int cantidad)
         {
