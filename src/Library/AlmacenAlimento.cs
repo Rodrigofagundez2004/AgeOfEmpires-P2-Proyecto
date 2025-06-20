@@ -2,10 +2,12 @@
 using System;
 using Library;
 
-public class AlmacenAlimento
+public class AlmacenAlimento : IAlmacenes
 {
     public int CapacidadActual { get; set; } = 0;
     public int CapacidadMaxima { get; set; } = 400;
+    public Iconos Icono { get; } = Iconos.Molino;
+
 
     public async Task<string> Guardar(TipoRecurso tipo, int cantidad)
     {

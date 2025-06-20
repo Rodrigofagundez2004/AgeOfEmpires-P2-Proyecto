@@ -8,6 +8,7 @@ namespace Library
         public string Name { get; set; } = "Almacen De Piedra";
         public int CapacidadActual { get; set; } = 0;
         public int CapacidadMaxima { get; set; } = 600;
+        public Iconos Icono { get; } = Iconos.AlmacenPiedra;
 
         public async Task<string> Guardar(TipoRecurso tipo, int cantidad)
         {

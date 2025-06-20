@@ -5,7 +5,7 @@ namespace Library
     public class Caballeria : Unidad, IAtacante, IAtacable
     {
         public Caballeria(string nombre = "Caballería", int x = 0, int y = 0)
-            : base(nombre, x, y, costoComida: 80, tiempoSegundos: 6)
+            : base(nombre, x, y, costoComida: 80, tiempoSegundos: 6, Iconos.Caballeria)
         {
             this.VidaActual = 100;
             this.VidaMaxima = 100;

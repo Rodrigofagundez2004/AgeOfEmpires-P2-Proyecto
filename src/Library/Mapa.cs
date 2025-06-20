@@ -16,13 +16,10 @@ namespace Library
             Celdas = new Celda[Tamaño, Tamaño];
             Bosques = new bool[Tamaño, Tamaño];
             Minas = new bool[Tamaño, Tamaño];
+
             for (int x = 0; x < Tamaño; x++)
-            {
                 for (int y = 0; y < Tamaño; y++)
-                {
                     Celdas[x, y] = new Celda(x, y);
-                }
-            }
         }
 
         public Celda ObtenerCelda(int x, int y)
@@ -32,7 +29,6 @@ namespace Library
 
             return Celdas[x, y];
         }
-
 
         public void PosicionarEdificio(Edificio edificio, int x, int y)
         {
@@ -44,7 +40,6 @@ namespace Library
                     throw new InvalidOperationException("La celda ya está ocupada por otra unidad o edificio.");
 
                 celda.Edificio = edificio;
-
             }
             catch (ArgumentOutOfRangeException ex)
             {
@@ -96,14 +91,45 @@ namespace Library
             {
                 for (int x = 0; x < Tamaño; x++)
                 {
-                    if (Celdas[x, y].EstaOcupada)
-                        Console.Write("X ");
-                    else if (Bosques[x, y])
-                        Console.Write("B ");
-                    else if (Minas[x, y])
-                        Console.Write("M ");
+                    var celda = Celdas[x, y];
+
+                    if (celda.UnidadOcupante != null)
+                    {
+                        
+                        Console.Write((char)celda.UnidadOcupante.Icono + " ");
+                    }
+                    else if (celda.Edificio != null)
+                    {
+                       
+                        Console.Write((char)celda.Edificio.Icono + " ");
+                    }
+                    else if (celda.Recurso != null)
+                    {
+                        
+                        switch (celda.Recurso.Tipo)
+                        {
+                            case TipoRecurso.Madera:
+                                Console.Write((char)Iconos.Bosque + " ");
+                                break;
+                            case TipoRecurso.Oro:
+                                Console.Write((char)Iconos.MinaOro + " ");
+                                break;
+                            case TipoRecurso.Piedra:
+                                Console.Write((char)Iconos.MinaPiedra + " ");
+                                break;
+                            case TipoRecurso.Alimento:
+                                Console.Write((char)Iconos.Granja + " ");
+                                break;
+                            default:
+                                Console.Write(". ");
+                                break;
+                        }
+                    }
                     else
+                    {
+                       
                         Console.Write(". ");
+                    }
                 }
                 Console.WriteLine();
             }
@@ -112,20 +138,37 @@ namespace Library
         public bool EsCeldaValida(int x, int y)
             => x >= 0 && y >= 0 && x < Tamaño && y < Tamaño;
 
-        public void GenerarMinas(int cantidad)
+        public void GenerarMinasDeOro(int cantidad)
         {
             var libres = new List<(int x, int y)>();
             for (int xx = 0; xx < Tamaño; xx++)
                 for (int yy = 0; yy < Tamaño; yy++)
                     if (!Celdas[xx, yy].EstaOcupada && !Minas[xx, yy])
                         libres.Add((xx, yy));
+
             var rnd = new Random();
             foreach (var (cx, cy) in libres.OrderBy(_ => rnd.Next()).Take(cantidad))
+            {
                 Minas[cx, cy] = true;
+                Celdas[cx, cy].Recurso = new MinaOro(300);
+            }
         }
-        public bool EsMina(int x, int y)
-            => EsCeldaValida(x, y) && Bosques[x, y];
 
+        public void GenerarMinasPiedras(int cantidad)
+        {
+            var libres = new List<(int x, int y)>();
+            for (int xx = 0; xx < Tamaño; xx++)
+                for (int yy = 0; yy < Tamaño; yy++)
+                    if (!Celdas[xx, yy].EstaOcupada && !Minas[xx, yy])
+                        libres.Add((xx, yy));
+
+            var rnd = new Random();
+            foreach (var (cx, cy) in libres.OrderBy(_ => rnd.Next()).Take(cantidad))
+            {
+                Minas[cx, cy] = true;
+                Celdas[cx, cy].Recurso = new MinaPiedra(400);
+            }
+        }
 
         public void GenerarBosques(int cantidad)
         {
@@ -137,10 +180,25 @@ namespace Library
 
             var rnd = new Random();
             foreach (var (cx, cy) in libres.OrderBy(_ => rnd.Next()).Take(cantidad))
+            {
                 Bosques[cx, cy] = true;
+                Celdas[cx, cy].Recurso = new Bosque(500);
+            }
         }
+
+        public bool EsMinaOro(int x, int y)
+            => EsCeldaValida(x, y) && Minas[x, y] && Celdas[x, y].Recurso is MinaOro;
+
+        public bool EsMinaPiedra(int x, int y)
+            => EsCeldaValida(x, y) && Minas[x, y] && Celdas[x, y].Recurso is MinaPiedra;
 
         public bool EsBosque(int x, int y)
             => EsCeldaValida(x, y) && Bosques[x, y];
+
+        public IRecursos ObtenerRecursoEn(int x, int y)
+        {
+            if (!EsCeldaValida(x, y)) return null;
+            return Celdas[x, y].Recurso;
+        }
     }
 }

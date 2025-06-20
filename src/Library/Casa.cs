@@ -6,7 +6,7 @@ namespace Library
     {
         public int AumentoPoblacion = 5;
 
-        public Casa(int x = 0, int y = 0)
+        public Casa(int x = 0, int y = 0, Iconos.Casa)
             : base(
                 vidaMaxima: 1000,
                 vidaActual: 1000,

@@ -5,7 +5,7 @@ namespace Library
     public class Arquero : Unidad, IAtacante, IAtacable
     {
         public Arquero(string nombre = "Arquero", int x = 0, int y = 0)
-            : base(nombre, x, y, costoComida: 50, tiempoSegundos: 5)
+            : base(nombre, x, y, costoComida: 50, tiempoSegundos: 5, Iconos.Arquero)
         {
             this.VidaActual = 100;
             this.VidaMaxima = 100;

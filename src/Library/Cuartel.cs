@@ -5,7 +5,7 @@ namespace Library
 {
     public class Cuartel : Edificio, IEntrenador
     {
-        public Cuartel(int x = 0, int y = 0)
+        public Cuartel(int x = 0, int y = 0, Iconos.Cuartel)
             : base(
                 vidaMaxima: 2000,
                 vidaActual: 2000,

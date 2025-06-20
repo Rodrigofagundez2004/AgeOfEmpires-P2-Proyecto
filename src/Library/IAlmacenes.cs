@@ -7,7 +7,8 @@ namespace Library
 		public string Name { get; set; }
 		public int CapacidadActual { get; set; }
 		public int CapacidadMaxima { get; set; }
-		Task<string> Guardar(TipoRecurso tipo, int cantidad);
+        public Iconos Icono { get; }
+        Task<string> Guardar(TipoRecurso tipo, int cantidad);
 
 
 	}

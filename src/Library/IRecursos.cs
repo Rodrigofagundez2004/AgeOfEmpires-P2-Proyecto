@@ -7,5 +7,6 @@ namespace Library
         public int CantidadDisponible { get; set; }
         TipoRecurso Tipo { get; }
         bool EstaAgotado { get; }
+        Iconos Icono { get; }
     }
 }

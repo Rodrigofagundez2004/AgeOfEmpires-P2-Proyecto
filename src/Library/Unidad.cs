@@ -15,14 +15,16 @@ namespace Library
         public int CostoComida { get; set; }
         public int TiempoEntrenamientoSegundos { get; set; }
         public TipoUnidad Tipo { get; set; }
+        public Iconos Icono { get; protected set; }
 
-        protected Unidad(string nombre, int x, int y, int costoComida = 0, int tiempoSegundos = 0)
+        protected Unidad(string nombre, int x, int y, int costoComida = 0, int tiempoSegundos = 0, Iconos icono)
         {
             Nombre = nombre;
             X = x;
             Y = y;
             CostoComida = costoComida;
             TiempoEntrenamientoSegundos = tiempoSegundos;
+            Icono = icono;
         }
 
         protected Unidad(TipoUnidad tipo)

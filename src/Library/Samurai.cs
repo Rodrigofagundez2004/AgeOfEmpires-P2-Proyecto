@@ -9,7 +9,7 @@ namespace Library
         public TipoUnidad UnidadEspecial => TipoUnidad.Samurai;
 
         public Samurai(string nombre = "Samurai", int x = 0, int y = 0)
-            : base(nombre, x, y, costoComida: 85, tiempoSegundos: 7)
+            : base(nombre, x, y, costoComida: 85, tiempoSegundos: 7, Iconos.Samurai)
         {
             this.VidaActual = 125;
             this.VidaMaxima = 125;
