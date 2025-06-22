@@ -6,6 +6,7 @@ namespace Library
         public int CantidadDisponible { get; set; }
         public TipoRecurso Tipo { get; protected set; }
         public bool EstaAgotado => CantidadDisponible <= 0;
+        public Iconos Icono { get; protected set; }
 
         protected Recursos(TipoRecurso tipo, int cantidadInicial)
         {

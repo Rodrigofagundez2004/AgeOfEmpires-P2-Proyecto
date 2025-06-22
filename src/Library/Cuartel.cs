@@ -3,15 +3,16 @@ using System.Collections.Generic;
 
 namespace Library
 {
-    public class Cuartel : Edificio, IEntrenador
+    public class Cuartel : Edificio, IEntrenador , IAtacable
     {
-        public Cuartel(int x = 0, int y = 0, Iconos.Cuartel)
+        public Cuartel(int x = 0, int y = 0)
             : base(
                 vidaMaxima: 2000,
                 vidaActual: 2000,
                 name: "Cuartel",
                 x: x,
-                y: y)
+                y: y,
+                icono: Iconos.Cuartel)
         {
         }
 

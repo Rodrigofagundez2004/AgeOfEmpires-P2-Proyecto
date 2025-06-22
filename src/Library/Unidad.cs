@@ -17,7 +17,7 @@ namespace Library
         public TipoUnidad Tipo { get; set; }
         public Iconos Icono { get; protected set; }
 
-        protected Unidad(string nombre, int x, int y, int costoComida = 0, int tiempoSegundos = 0, Iconos icono)
+        protected Unidad(string nombre, int x, int y, Iconos icono, int costoComida = 0, int tiempoSegundos = 0)
         {
             Nombre = nombre;
             X = x;

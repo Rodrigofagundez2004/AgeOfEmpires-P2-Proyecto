@@ -4,7 +4,8 @@ namespace Library
 {
     public class Infanteria : Unidad, IAtacante, IAtacable
     {
-        public Infanteria(string nombre = "Infantería", int x = 0, int y = 0) : base(nombre, x, y, costoComida: 40 , tiempoSegundos :5 , Iconos.Infanteria)
+        public Infanteria(string nombre = "Infantería", int x = 0, int y = 0) :
+            base(nombre, x, y, Iconos.Infanteria, costoComida: 40, tiempoSegundos: 5)
         {
             this.VidaActual = 100;
             this.VidaMaxima = 100;

@@ -3,37 +3,32 @@ using System.Threading.Tasks;
 
 namespace Library
 {
-    public class AlmacenOro : IAlmacenes
+    public class AlmacenOro : Edificio, IAlmacenes
     {
-        public string Name { get; set; } = "Almacen de oro";
         public int CapacidadActual { get; set; } = 0;
-        public int CapacidadMaxima { get; set; } = 500;
-        public Iconos Icono { get; } = Iconos.AlmacenOro;
+        public int CapacidadMaxima { get; set; } = 400;
+
+        public AlmacenOro(int x = 0, int y = 0)
+            : base(1000, 1000, "Almacén de Oro", x, y, Iconos.Oro)
+        {
+        }
 
         public async Task<string> Guardar(TipoRecurso tipo, int cantidad)
         {
             try
             {
                 if (tipo != TipoRecurso.Oro)
-                {
-                    throw new ArgumentException("Este almacen solo admite oro");
-                }
+                    throw new ArgumentException("Este almacén solo acepta oro.");
 
                 if (CapacidadActual >= CapacidadMaxima)
-                {
                     return "⚠️ El almacén ya está lleno. No se puede guardar más.";
-                }
 
                 if (CapacidadActual + cantidad > CapacidadMaxima)
-                {
                     cantidad = CapacidadMaxima - CapacidadActual;
-                }
 
                 CapacidadActual += cantidad;
-
                 await Task.Delay(400);
-
-                return $"🥖 Guardados {cantidad} de oro. Total: {CapacidadActual}/{CapacidadMaxima}";
+                return $"🥇 Guardados {cantidad} de oro. Total: {CapacidadActual}/{CapacidadMaxima}";
             }
             catch (ArgumentException ex)
             {

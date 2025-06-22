@@ -1,8 +1,8 @@
 namespace Library
 {
-    public class MinaOro : Recursos
+    public class MinaPiedra : Recursos
     {
-        public MinaOro(int cantidadInicial)
+        public MinaPiedra(int cantidadInicial)
             : base(TipoRecurso.Oro, cantidadInicial) { }
     }
 }

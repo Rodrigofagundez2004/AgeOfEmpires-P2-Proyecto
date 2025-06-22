@@ -3,31 +3,28 @@ using System.Threading.Tasks;
 
 namespace Library
 {
-    public class AlmacenPiedra : IAlmacenes
+    public class AlmacenPiedra : Edificio, IAlmacenes
     {
-        public string Name { get; set; } = "Almacen De Piedra";
         public int CapacidadActual { get; set; } = 0;
-        public int CapacidadMaxima { get; set; } = 600;
-        public Iconos Icono { get; } = Iconos.AlmacenPiedra;
+        public int CapacidadMaxima { get; set; } = 400;
+
+        public AlmacenPiedra(int x = 0, int y = 0)
+            : base(1000, 1000, "Almacén de Piedra", x, y, Iconos.Piedra)
+        {
+        }
 
         public async Task<string> Guardar(TipoRecurso tipo, int cantidad)
         {
             try
             {
                 if (tipo != TipoRecurso.Piedra)
-                {
-                    throw new ArgumentException("Este almacen solo admite piedra");
-                }
+                    throw new ArgumentException("Este almacén solo acepta piedra.");
 
                 if (CapacidadActual >= CapacidadMaxima)
-                {
                     return "⚠️ El almacén ya está lleno. No se puede guardar más.";
-                }
 
                 if (CapacidadActual + cantidad > CapacidadMaxima)
-                {
                     cantidad = CapacidadMaxima - CapacidadActual;
-                }
 
                 CapacidadActual += cantidad;
                 await Task.Delay(400);

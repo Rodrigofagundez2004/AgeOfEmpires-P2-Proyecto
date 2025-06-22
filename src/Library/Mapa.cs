@@ -138,7 +138,7 @@ namespace Library
         public bool EsCeldaValida(int x, int y)
             => x >= 0 && y >= 0 && x < Tamaño && y < Tamaño;
 
-        public void GenerarMinasDeOro(int cantidad)
+        public void GenerarMinasOro(int cantidad)
         {
             var libres = new List<(int x, int y)>();
             for (int xx = 0; xx < Tamaño; xx++)

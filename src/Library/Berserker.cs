@@ -8,7 +8,7 @@ namespace Library
         public TipoUnidad UnidadEspecial => TipoUnidad.Berserker;
 
         public Berserker(string nombre = "Berserker", int x = 0, int y = 0)
-            : base(nombre, x, y, costoComida: 80, tiempoSegundos: 6 , Iconos.Berserker)
+            : base(nombre, x, y, Iconos.Berserker, costoComida: 80, tiempoSegundos: 6)
         {
             this.VidaActual = 135;
             this.VidaMaxima = 135;
