@@ -135,7 +135,8 @@ namespace Library
 
             fuente.CantidadDisponible -= cantidadRecolectada;
             await Task.Delay(200);
-            await almacen.Guardar(fuente.Tipo, cantidadRecolectada);
+            string resultado = await almacen.Guardar(fuente.Tipo, cantidadRecolectada);
+            Console.WriteLine(resultado);
             await Task.Delay(1000);
             Icono = Iconos.Aldeano;
         }

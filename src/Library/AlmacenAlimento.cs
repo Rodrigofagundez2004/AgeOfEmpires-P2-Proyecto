@@ -9,8 +9,12 @@ namespace Library
         public int CapacidadMaxima { get; set; } = 400;
 
         public AlmacenAlimento(int x = 0, int y = 0)
-            : base(1000, 1000, "Almacén de Alimento", x, y, Iconos.Alimento)
+            : base(1000, 1000, "Almacén de Alimento", x, y, Iconos.Molino, costo: new CostoConstruccion(madera: 20, piedra: 15, oro: 10, alimento: 0))
         {
+        }
+        public bool AceptaRecurso(TipoRecurso tipo)
+        {
+            return tipo == TipoRecurso.Alimento;
         }
 
         public async Task<string> Guardar(TipoRecurso tipo, int cantidad)

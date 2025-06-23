@@ -1,10 +1,16 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Library
 {
-    public class Jugador
+    public class Jugador : IAlmacenes
     {
+        public string Name { get; set; } = "Almacén del Jugador";
+        public int CapacidadActual { get; set; } = 0;
+        public int CapacidadMaxima { get; set; } = 1000; 
+        public Iconos Icono => Iconos.Vacio; 
+
         public Dictionary<TipoRecurso, IRecursos> Recursos { get; private set; }
         public List<Unidad> Unidades { get; private set; }
         public List<Edificio> Edificios { get; private set; }
@@ -29,6 +35,10 @@ namespace Library
         {
             return PoblacionActual < CapacidadPoblacionMaxima;
         }
+        public bool AceptaRecurso(TipoRecurso tipo)
+        {
+            return true;
+        }
 
         public void MostrarRecursos()
         {
@@ -38,20 +48,35 @@ namespace Library
                 Console.WriteLine($"{(char)recurso.Icono} {recurso.Tipo}: {recurso.CantidadDisponible}");
             }
         }
-    }
-    public class RecursoJugador : Recursos
-    {
-        public RecursoJugador(TipoRecurso tipo, int cantidadInicial)
-            : base(tipo, cantidadInicial)
+
+        public bool IntentarPagar(CostoConstruccion costo)
         {
-            Icono = tipo switch
+            if (!costo.PuedePagar(Recursos))
             {
-                TipoRecurso.Madera => Iconos.Madera,
-                TipoRecurso.Oro => Iconos.Oro,
-                TipoRecurso.Piedra => Iconos.Piedra,
-                TipoRecurso.Alimento => Iconos.Alimento,
-                _ => Iconos.Vacio
-            };
+                Console.WriteLine("\n No tienes suficientes recursos para realizar esta acción.");
+                Console.WriteLine($"Costo requerido: {costo}");
+                MostrarRecursos();
+                return false;
+            }
+
+            costo.Pagar(Recursos);
+            Console.WriteLine($"\n  Recursos pagados con éxito. Costo: {costo}");
+            return true;
+        }
+
+        public void Almacenar(TipoRecurso tipo, int cantidad)
+        {
+            if (Recursos.ContainsKey(tipo))
+            {
+                Recursos[tipo].Agregar(cantidad);
+                CapacidadActual += cantidad;
+            }
+        }
+
+        public async Task<string> Guardar(TipoRecurso tipo, int cantidad)
+        {
+            Almacenar(tipo, cantidad);
+            return await Task.FromResult($"Guardados {cantidad} de {tipo} en el jugador.");
         }
     }
 }

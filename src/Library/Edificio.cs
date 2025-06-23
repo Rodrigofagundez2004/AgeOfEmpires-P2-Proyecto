@@ -12,8 +12,9 @@ namespace Library
         public int Y { get; }
         public double Eficiencia { get; private set; } = 1.0;
         public Iconos Icono { get; protected set; }
+        public CostoConstruccion Costo { get; protected set; }
 
-        protected Edificio(int vidaMaxima, int vidaActual, string name, int x, int y , Iconos  icono)
+        protected Edificio(int vidaMaxima, int vidaActual, string name, int x, int y , Iconos  icono, CostoConstruccion costo)
         {
             VidaMaxima = vidaMaxima;
             VidaActual = vidaActual;
@@ -21,6 +22,7 @@ namespace Library
             X = x;
             Y = y;
             Icono = icono;
+            Costo = costo;
         }
 
         public virtual async Task<int> RecibirDaño(int daño)

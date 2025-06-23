@@ -67,16 +67,32 @@ namespace Library
 
         public void MoverUnidad(Unidad unidad, int destinoX, int destinoY)
         {
-            var origen = ObtenerCelda(unidad.X, unidad.Y);
-            var destino = ObtenerCelda(destinoX, destinoY);
+            try
+            {
+                var origen = ObtenerCelda(unidad.X, unidad.Y);
+                var destino = ObtenerCelda(destinoX, destinoY);
 
-            if (destino.EstaOcupada)
-                throw new Exception("No se puede mover, destino ocupado");
+                if (destino.EstaOcupada)
+                    throw new Exception("No se puede mover, destino ocupado");
 
-            origen.UnidadOcupante = null;
-            destino.UnidadOcupante = unidad;
-            unidad.MoverA(destinoX, destinoY);
+                origen.UnidadOcupante = null;
+                destino.UnidadOcupante = unidad;
+                unidad.MoverA(destinoX, destinoY);
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                Console.WriteLine($"[ERROR - Movimiento inválido] {ex.Message}");
+            }
+            catch (Exception ex) when (ex.Message == "No se puede mover, destino ocupado")
+            {
+                Console.WriteLine($"[ERROR - Movimiento bloqueado] {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[ERROR - General] {ex.Message}");
+            }
         }
+
 
         public void LiberarCelda(int x, int y)
         {
@@ -95,17 +111,14 @@ namespace Library
 
                     if (celda.UnidadOcupante != null)
                     {
-                        
                         Console.Write((char)celda.UnidadOcupante.Icono + " ");
                     }
                     else if (celda.Edificio != null)
                     {
-                       
                         Console.Write((char)celda.Edificio.Icono + " ");
                     }
                     else if (celda.Recurso != null)
                     {
-                        
                         switch (celda.Recurso.Tipo)
                         {
                             case TipoRecurso.Madera:
@@ -127,7 +140,6 @@ namespace Library
                     }
                     else
                     {
-                       
                         Console.Write(". ");
                     }
                 }
@@ -143,7 +155,7 @@ namespace Library
             var libres = new List<(int x, int y)>();
             for (int xx = 0; xx < Tamaño; xx++)
                 for (int yy = 0; yy < Tamaño; yy++)
-                    if (!Celdas[xx, yy].EstaOcupada && !Minas[xx, yy])
+                    if (!Celdas[xx, yy].EstaOcupada && !Minas[xx, yy] && Celdas[xx, yy].Edificio == null)
                         libres.Add((xx, yy));
 
             var rnd = new Random();
@@ -159,7 +171,7 @@ namespace Library
             var libres = new List<(int x, int y)>();
             for (int xx = 0; xx < Tamaño; xx++)
                 for (int yy = 0; yy < Tamaño; yy++)
-                    if (!Celdas[xx, yy].EstaOcupada && !Minas[xx, yy])
+                    if (!Celdas[xx, yy].EstaOcupada && !Minas[xx, yy] && Celdas[xx, yy].Edificio == null)
                         libres.Add((xx, yy));
 
             var rnd = new Random();
@@ -175,7 +187,7 @@ namespace Library
             var libres = new List<(int x, int y)>();
             for (int xx = 0; xx < Tamaño; xx++)
                 for (int yy = 0; yy < Tamaño; yy++)
-                    if (!Celdas[xx, yy].EstaOcupada && !Bosques[xx, yy])
+                    if (!Celdas[xx, yy].EstaOcupada && !Bosques[xx, yy] && Celdas[xx, yy].Edificio == null)
                         libres.Add((xx, yy));
 
             var rnd = new Random();
@@ -195,10 +207,36 @@ namespace Library
         public bool EsBosque(int x, int y)
             => EsCeldaValida(x, y) && Bosques[x, y];
 
-        public IRecursos ObtenerRecursoEn(int x, int y)
+        public IRecursos? ObtenerRecursoEn(int x, int y)
         {
-            if (!EsCeldaValida(x, y)) return null;
+            if (!EsCeldaValida(x, y)) return 
+                    null;
             return Celdas[x, y].Recurso;
         }
+        public IRecursos? BuscarRecursoMasCercano(int origenX, int origenY)
+        {
+            IRecursos? recursoMasCercano = null;
+            int menorDistancia = int.MaxValue;
+
+            for (int x = 0; x < Tamaño; x++)
+            {
+                for (int y = 0; y < Tamaño; y++)
+                {
+                    var recurso = ObtenerRecursoEn(x, y);
+                    if (recurso == null || recurso.EstaAgotado)
+                        continue;
+
+                    int distancia = Math.Abs(x - origenX) + Math.Abs(y - origenY);
+                    if (distancia < menorDistancia)
+                    {
+                        menorDistancia = distancia;
+                        recursoMasCercano = recurso;
+                    }
+                }
+            }
+
+            return recursoMasCercano;
+        }
+
     }
 }

@@ -4,7 +4,7 @@ namespace Library
 {
     public class Casa : Edificio
     {
-        public int AumentoPoblacion = 5;
+        public int AumentoPoblacion { get; } = 5;
 
         public Casa(int x = 0, int y = 0)
             : base(
@@ -13,13 +13,9 @@ namespace Library
                 name: "Casa",
                 x: x,
                 y: y,
-                icono: Iconos.Casa)
+                icono: Iconos.Casa,
+                costo: new CostoConstruccion(madera: 20, piedra: 15, oro: 10, alimento: 0))
         {
-        }
-
-        public void Construir(Jugador jugador)
-        {
-            jugador.CapacidadPoblacionMaxima += AumentoPoblacion;
         }
     }
 }

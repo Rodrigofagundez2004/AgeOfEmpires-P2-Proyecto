@@ -22,5 +22,10 @@ namespace Library
                 _ => 1.0
             };
         }
+
+        public void Agregar(int cantidad)
+        {
+            CantidadDisponible += cantidad;
+        }
     }
 }

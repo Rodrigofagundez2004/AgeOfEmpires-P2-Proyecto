@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Library
 {
@@ -8,6 +10,7 @@ namespace Library
         private readonly Mapa mapa;
         private readonly CentroCivico centroCivico;
         private readonly Jugador jugador1;
+        public Jugador Jugador1 => jugador1;
 
         public JuegoFacade()
         {
@@ -16,26 +19,22 @@ namespace Library
             mapa.GenerarMinasOro(10);
             mapa.GenerarMinasPiedras(10);
 
-            centroCivico = new CentroCivico(0, 0);
+            centroCivico = new CentroCivico(5, 3);
             jugador1 = new Jugador();
 
-            // Posiciona el Centro Cívico en el mapa
             mapa.PosicionarEdificio(centroCivico, 0, 0);
             jugador1.Edificios.Add(centroCivico);
 
-            // Crear 3 aldeanos dentro del Centro Cívico, sin posicionarlos en el mapa
             for (int i = 0; i < 3; i++)
             {
                 var aldeano = new Aldeano(x: 0, y: 0);
                 centroCivico.AgregarAldeano(aldeano);
                 jugador1.Unidades.Add(aldeano);
-                // No posicionamos en mapa para que no aparezcan fuera
             }
 
             Console.WriteLine("Has empezado el juego con 1 Centro Cívico y 3 aldeanos dentro.");
         }
 
-        // Mostrar Centro Cívico y sus aldeanos internos
         public void MostrarCentroCivico()
         {
             Console.WriteLine($"Centro Cívico en (0,0) - Vida: {centroCivico.VidaActual}/{centroCivico.VidaMaxima}");
@@ -53,7 +52,6 @@ namespace Library
             }
         }
 
-        // Elegir civilización y mostrar bonificaciones
         public string ElegirCivilizacionYObtenerTipo()
         {
             Console.WriteLine("\nElegí tu civilización:");
@@ -61,19 +59,22 @@ namespace Library
             Console.WriteLine("2. Romanos");
             Console.WriteLine("3. Vikingos");
 
-            string opcion = Console.ReadLine();
+            string opcion = Console.ReadLine() ?? "";
 
             List<Bonificacion> bonificaciones = opcion switch
             {
-                "1" => new() {
+                "1" => new()
+                {
                     new Bonificacion(TipoBonificacion.AtaqueAumentado, "Velocidad de ataque +25%", 1.25),
                     new Bonificacion(TipoBonificacion.VelocidadRecoleccion, "Oro se recolecta más rápido", 1.2)
                 },
-                "2" => new() {
+                "2" => new()
+                {
                     new Bonificacion(TipoBonificacion.DefensaAumentada, "Defensa mejorada +20%", 1.2),
                     new Bonificacion(TipoBonificacion.CostoReducido, "Unidades cuestan menos", 0.9)
                 },
-                "3" => new() {
+                "3" => new()
+                {
                     new Bonificacion(TipoBonificacion.VelocidadConstruccion, "Construye más rápido +20%", 1.2),
                     new Bonificacion(TipoBonificacion.CapacidadPoblacion, "Vida aumentada +30%", 1.3)
                 },
@@ -87,10 +88,9 @@ namespace Library
             return opcion;
         }
 
-        // Agregar unidad especial al mapa según civilización
-        public void AgregarUnidadPorCivilizacion(string tipo)
+        public void AgregarUnidadPorCivilizacion(Jugador jugador, string tipo)
         {
-            Unidad unidadEspecial = tipo switch
+            Unidad? unidadEspecial = tipo switch
             {
                 "1" => new Samurai("Samurai", 2, 1),
                 "2" => new Legionario("Legionario", 2, 1),
@@ -98,15 +98,17 @@ namespace Library
                 _ => null
             };
 
-            if (unidadEspecial != null)
+            if (unidadEspecial == null)
             {
-                jugador1.Unidades.Add(unidadEspecial);
-                mapa.PosicionarUnidad(unidadEspecial, 2, 1);
-                Console.WriteLine($"\n🎖️ Unidad especial añadida: {unidadEspecial.Nombre} en (2,1).");
+                Console.WriteLine("❌ Opción de civilización inválida. No se creó ninguna unidad.");
+                return;
             }
+
+            jugador.Unidades.Add(unidadEspecial);
+            mapa.PosicionarUnidad(unidadEspecial, 2, 1);
+            Console.WriteLine($"\n🎖️ Unidad especial añadida: {unidadEspecial.Nombre} en (2,1).");
         }
 
-        // Mostrar aldeanos dentro del Centro Cívico
         public void MostrarAldeanos()
         {
             var aldeanos = centroCivico.ObtenerAldeanos();
@@ -121,7 +123,6 @@ namespace Library
                 Console.WriteLine($"- {a.Nombre} / Vida: {a.VidaActual}");
         }
 
-        // Mostrar estado general recursos, unidades y edificios
         public void MostrarEstado()
         {
             Console.WriteLine("\n=== ESTADO DEL JUEGO ===");
@@ -132,23 +133,199 @@ namespace Library
             Console.WriteLine($"Edificios totales: {jugador1.Edificios.Count}");
         }
 
-     
         public void MostrarMapa()
         {
             mapa.MostrarMapa();
         }
 
-       
         public void MoverUnidades(List<Unidad> unidades, int nuevaX, int nuevaY)
         {
             foreach (var u in unidades)
                 mapa.MoverUnidad(u, nuevaX, nuevaY);
         }
 
-      
-        public List<Unidad> UnidadesJugador()
+        public List<Unidad> UnidadesJugador(Jugador jugador)
         {
-            return jugador1.Unidades;
+            return jugador.Unidades;
+        }
+
+        public async Task AldeanoRecolecta(IAlmacenes almacenes)
+        {
+            var aldeano = centroCivico.SacarAldeano();
+
+            if (aldeano == null)
+            {
+                Console.WriteLine("❌ No hay aldeanos disponibles en el Centro Cívico.");
+                return;
+            }
+
+            var recurso = mapa.BuscarRecursoMasCercano(aldeano.X, aldeano.Y);
+
+            if (recurso == null)
+            {
+                Console.WriteLine("❌ No hay recursos disponibles en el mapa.");
+                centroCivico.AgregarAldeano(aldeano);
+                return;
+            }
+
+            Celda? celda = null;
+            for (int x = 0; x < Mapa.Tamaño; x++)
+            {
+                for (int y = 0; y < Mapa.Tamaño; y++)
+                {
+                    if (mapa.Celdas[x, y].Recurso == recurso)
+                    {
+                        celda = mapa.Celdas[x, y];
+                        break;
+                    }
+                }
+                if (celda != null)
+                    break;
+            }
+
+            if (celda == null)
+            {
+                Console.WriteLine("❌ No se encontró la posición del recurso.");
+                centroCivico.AgregarAldeano(aldeano);
+                return;
+            }
+
+            mapa.MoverUnidad(aldeano, celda.X, celda.Y);
+
+            
+            IAlmacenes? almacenDestino = jugador1.Edificios
+                .OfType<IAlmacenes>()
+                .FirstOrDefault(a => a.AceptaRecurso(recurso.Tipo)); //busca almmacecn mas cercano utiliza un lambda expression
+
+            if (almacenDestino == null)
+            {
+                Console.WriteLine("⚠️ No hay almacén específico para este recurso, se usará el almacén general del jugador.");
+                almacenDestino = jugador1;
+            }
+
+            await aldeano.Recolectar(recurso, almacenDestino, mapa);
+
+            centroCivico.AgregarAldeano(aldeano);
+
+            Console.WriteLine($"✅ {aldeano.Nombre} recolectó {recurso.Tipo} desde ({celda.X},{celda.Y}) y lo guardó en {almacenDestino.Name}.");
+        }
+
+        public async Task SacarAldeanoYConstruirEdificio(IAlmacenes almacenes, Edificio edificio, int x, int y)
+        {
+            Aldeano? aldeano = centroCivico.SacarAldeano();
+
+            if (aldeano == null)
+            {
+                Console.WriteLine("❌ No hay aldeanos disponibles en el Centro Cívico para construir.");
+                return;
+            }
+
+            if (almacenes is Jugador jugador)
+            {
+                jugador.Unidades.Remove(aldeano);
+            }
+
+            await ConstruirEdificioConAldeano(almacenes, edificio, x, y, aldeano);
+        }
+        public void SacarUnidadDeCuartel(Cuartel cuartel, int destinoX, int destinoY)
+        {
+            Unidad? unidad = cuartel.SacarUnidad();
+
+            if (unidad == null)
+            {
+                Console.WriteLine("❌ No hay unidades dentro del Cuartel.");
+                return;
+            }
+
+            if (!mapa.EsCeldaValida(destinoX, destinoY) || mapa.ObtenerCelda(destinoX, destinoY).EstaOcupada)
+            {
+                Console.WriteLine("❌ No se puede posicionar la unidad. Coordenadas inválidas u ocupadas.");
+                cuartel.AgregarUnidad(unidad); 
+                return;
+            }
+
+            mapa.PosicionarUnidad(unidad, destinoX, destinoY);
+            unidad.MoverA(destinoX, destinoY);
+            Console.WriteLine($"✅ Unidad {unidad.Nombre} fue colocada en ({destinoX},{destinoY}) desde el Cuartel.");
+        }
+
+        public void EntrenarUnidadEnCuartel(Cuartel cuartel)
+        {
+            Console.WriteLine("\n--- ENTRENAR UNIDAD ---");
+            Console.WriteLine("Elegí el tipo de unidad:");
+            Console.WriteLine("1. Aldeano");
+            Console.WriteLine("2. Arquero");
+            Console.WriteLine("3. Infantería");
+            Console.WriteLine("4. Caballería");
+
+            string opcion = Console.ReadLine() ?? "";
+
+            TipoUnidad tipo = opcion switch
+            {
+                "1" => TipoUnidad.Aldeano,
+                "2" => TipoUnidad.Arquero,
+                "3" => TipoUnidad.Infanteria,
+                "4" => TipoUnidad.Caballeria,
+                _ => TipoUnidad.Aldeano
+            };
+
+            var costo = cuartel.ObtenerCostoPorTipo(tipo);
+
+            Console.WriteLine($"Costo de {tipo}: Madera={costo.Madera}, Piedra={costo.Piedra}, Oro={costo.Oro}, Alimento={costo.Alimento}");
+
+            if (!jugador1.IntentarPagar(costo))
+            {
+                Console.WriteLine("❌ No tenés suficientes recursos para entrenar esa unidad.");
+                return;
+            }
+
+            Unidad nuevaUnidad = cuartel.EntrenarUnidad(tipo);
+            cuartel.AgregarUnidad(nuevaUnidad);
+            jugador1.Unidades.Add(nuevaUnidad); 
+            Console.WriteLine($"✅ Unidad {nuevaUnidad.Nombre} entrenada y guardada dentro del Cuartel.");
+        }
+
+
+        public async Task ConstruirEdificioConAldeano(IAlmacenes almacenes, Edificio edificio, int x, int y, Aldeano aldeano)
+        {
+            if (!mapa.EsCeldaValida(x, y))
+            {
+                Console.WriteLine($"❌ La posición ({x},{y}) no es válida en el mapa.");
+                return;
+            }
+
+            var celda = mapa.ObtenerCelda(x, y);
+            if (celda == null || celda.EstaOcupada)
+            {
+                Console.WriteLine($"❌ La celda ({x},{y}) ya está ocupada, no se puede construir ahí.");
+                return;
+            }
+
+            if (almacenes is Jugador jugador)
+            {
+                if (!jugador.IntentarPagar(edificio.Costo))
+                {
+                    Console.WriteLine($"❌ No tienes suficientes recursos para construir un {edificio.Name}.");
+                    return;
+                }
+
+                mapa.PosicionarEdificio(edificio, x, y);
+
+                await aldeano.Construir(x, y, edificio, mapa);
+
+                jugador.Edificios.Add(edificio);
+                if (edificio is Casa casa)
+                {
+                    jugador.CapacidadPoblacionMaxima += casa.AumentoPoblacion;
+                    Console.WriteLine($"🏡 Capacidad de población aumentada en +{casa.AumentoPoblacion}.");
+                }
+
+                Console.WriteLine($"✅ {edificio.Name} construido en ({x},{y}) por {aldeano.Nombre}.");
+            }
+            else
+            {
+                Console.WriteLine("❌ El almacén no tiene permisos para construir edificios.");
+            }
         }
     }
 }

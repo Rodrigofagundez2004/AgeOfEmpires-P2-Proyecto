@@ -18,7 +18,7 @@
         Berserker = 'B',
 
         // === EDIFICIOS PRINCIPALES ===
-        CentroCivico = '⌂',  // o usar 'H' si no soporta unicode
+        CentroCivico = 'H',  // o usar 'H' si no soporta unicode
         Cuartel = 'Q',
         Casa = 'h',
 
