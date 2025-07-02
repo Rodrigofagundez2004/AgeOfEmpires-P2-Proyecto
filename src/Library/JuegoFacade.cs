@@ -8,9 +8,11 @@ namespace Library
     public class JuegoFacade
     {
         private readonly Mapa mapa;
-        private readonly CentroCivico centroCivico;
-        private readonly Jugador jugador1;
-        public Jugador Jugador1 => jugador1;
+        private readonly CentroCivico centroCivicoJ1;
+        private readonly CentroCivico centroCivicoJ2;
+
+        public Jugador Jugador1 { get; }
+        public Jugador Jugador2 { get; }
 
         public JuegoFacade()
         {
@@ -19,26 +21,37 @@ namespace Library
             mapa.GenerarMinasOro(10);
             mapa.GenerarMinasPiedras(10);
 
-            centroCivico = new CentroCivico(5, 3);
-            jugador1 = new Jugador();
+            centroCivicoJ1 = new CentroCivico(5, 3);
+            centroCivicoJ2 = new CentroCivico(50, 45);
 
-            mapa.PosicionarEdificio(centroCivico, 0, 0);
-            jugador1.Edificios.Add(centroCivico);
+            Jugador1 = new Jugador("Jugador 1");
+            Jugador2 = new Jugador("Jugador 2");
+
+            mapa.PosicionarEdificio(centroCivicoJ1, 0, 0);
+            mapa.PosicionarEdificio(centroCivicoJ2, 99, 99);
+
+            Jugador1.Edificios.Add(centroCivicoJ1);
+            Jugador2.Edificios.Add(centroCivicoJ2);
 
             for (int i = 0; i < 3; i++)
             {
-                var aldeano = new Aldeano(x: 0, y: 0);
-                centroCivico.AgregarAldeano(aldeano);
-                jugador1.Unidades.Add(aldeano);
+                var aldeano1 = new Aldeano(x: 0, y: 0);
+                centroCivicoJ1.AgregarAldeano(aldeano1);
+                Jugador1.Unidades.Add(aldeano1);
+
+                var aldeano2 = new Aldeano(x: 99, y: 99);
+                centroCivicoJ2.AgregarAldeano(aldeano2);
+                Jugador2.Unidades.Add(aldeano2);
             }
 
             Console.WriteLine("Has empezado el juego con 1 Centro Cívico y 3 aldeanos dentro.");
         }
 
-        public void MostrarCentroCivico()
-        {
+        public void MostrarCentroCivico(Jugador jugador)
+        { 
+            var cc = ObtenerCentroCivico(jugador);
             Console.WriteLine($"Centro Cívico en (0,0) - Vida: {centroCivico.VidaActual}/{centroCivico.VidaMaxima}");
-            var aldeanos = centroCivico.ObtenerAldeanos();
+            var aldeanos = cc.ObtenerAldeanos();
             if (aldeanos.Count == 0)
             {
                 Console.WriteLine("No hay aldeanos dentro del Centro Cívico.");
@@ -109,9 +122,10 @@ namespace Library
             Console.WriteLine($"\n🎖️ Unidad especial añadida: {unidadEspecial.Nombre} en (2,1).");
         }
 
-        public void MostrarAldeanos()
+        public void MostrarAldeanos(Jugador jugador)
         {
-            var aldeanos = centroCivico.ObtenerAldeanos();
+            var cc = ObtenerCentroCivico(jugador);
+            var aldeanos = cc.ObtenerAldeanos();
             if (aldeanos.Count == 0)
             {
                 Console.WriteLine("No hay aldeanos en el Centro Cívico.");
@@ -123,14 +137,14 @@ namespace Library
                 Console.WriteLine($"- {a.Nombre} / Vida: {a.VidaActual}");
         }
 
-        public void MostrarEstado()
+        public void MostrarEstado(Jugador jugador)
         {
             Console.WriteLine("\n=== ESTADO DEL JUEGO ===");
             Console.WriteLine("Recursos del jugador:");
-            foreach (var kvp in jugador1.Recursos)
+            foreach (var kvp in jugador.Recursos)
                 Console.WriteLine($"- {kvp.Key}: {kvp.Value.CantidadDisponible}");
-            Console.WriteLine($"Unidades totales: {jugador1.Unidades.Count}");
-            Console.WriteLine($"Edificios totales: {jugador1.Edificios.Count}");
+            Console.WriteLine($"Unidades totales: {jugador.Unidades.Count}");
+            Console.WriteLine($"Edificios totales: {jugador.Edificios.Count}");
         }
 
         public void MostrarMapa()
@@ -149,9 +163,10 @@ namespace Library
             return jugador.Unidades;
         }
 
-        public async Task AldeanoRecolecta(IAlmacenes almacenes)
+        public async Task AldeanoRecolecta(IAlmacenes almacenes, Jugador jugador)
         {
-            var aldeano = centroCivico.SacarAldeano();
+            var cc = ObtenerCentroCivico(jugador);
+            var aldeano = cc.SacarAldeano();
 
             if (aldeano == null)
             {
@@ -164,7 +179,7 @@ namespace Library
             if (recurso == null)
             {
                 Console.WriteLine("❌ No hay recursos disponibles en el mapa.");
-                centroCivico.AgregarAldeano(aldeano);
+                cc.AgregarAldeano(aldeano);
                 return;
             }
 
@@ -193,14 +208,14 @@ namespace Library
             mapa.MoverUnidad(aldeano, celda.X, celda.Y);
 
             
-            IAlmacenes? almacenDestino = jugador1.Edificios
+            IAlmacenes? almacenDestino = jugador.Edificios
                 .OfType<IAlmacenes>()
                 .FirstOrDefault(a => a.AceptaRecurso(recurso.Tipo)); //busca almmacecn mas cercano utiliza un lambda expression
 
             if (almacenDestino == null)
             {
                 Console.WriteLine("⚠️ No hay almacén específico para este recurso, se usará el almacén general del jugador.");
-                almacenDestino = jugador1;
+                almacenDestino = jugador;
             }
 
             await aldeano.Recolectar(recurso, almacenDestino, mapa);
