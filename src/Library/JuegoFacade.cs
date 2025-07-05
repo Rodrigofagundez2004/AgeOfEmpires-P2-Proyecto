@@ -46,11 +46,15 @@ namespace Library
 
             Console.WriteLine("Has empezado el juego con 1 Centro Cívico y 3 aldeanos dentro.");
         }
+        private CentroCivico ObtenerCentroCivico(Jugador jugador)
+        {
+            return jugador == Jugador1 ? centroCivicoJ1 : centroCivicoJ2;
+        }
 
         public void MostrarCentroCivico(Jugador jugador)
         { 
             var cc = ObtenerCentroCivico(jugador);
-            Console.WriteLine($"Centro Cívico en (0,0) - Vida: {centroCivico.VidaActual}/{centroCivico.VidaMaxima}");
+            Console.WriteLine($"Centro Cívico en (0,0) - Vida: {cc.VidaActual}/{cc.VidaMaxima}");
             var aldeanos = cc.ObtenerAldeanos();
             if (aldeanos.Count == 0)
             {
@@ -141,8 +145,7 @@ namespace Library
         {
             Console.WriteLine("\n=== ESTADO DEL JUEGO ===");
             Console.WriteLine("Recursos del jugador:");
-            foreach (var kvp in jugador.Recursos)
-                Console.WriteLine($"- {kvp.Key}: {kvp.Value.CantidadDisponible}");
+            jugador.Inventario.Mostrar();
             Console.WriteLine($"Unidades totales: {jugador.Unidades.Count}");
             Console.WriteLine($"Edificios totales: {jugador.Edificios.Count}");
         }
@@ -163,7 +166,7 @@ namespace Library
             return jugador.Unidades;
         }
 
-        public async Task AldeanoRecolecta(IAlmacenes almacenes, Jugador jugador)
+        public async Task AldeanoRecolecta(Jugador jugador)
         {
             var cc = ObtenerCentroCivico(jugador);
             var aldeano = cc.SacarAldeano();
@@ -201,33 +204,37 @@ namespace Library
             if (celda == null)
             {
                 Console.WriteLine("❌ No se encontró la posición del recurso.");
-                centroCivico.AgregarAldeano(aldeano);
+                cc.AgregarAldeano(aldeano);
                 return;
             }
 
             mapa.MoverUnidad(aldeano, celda.X, celda.Y);
 
-            
-            IAlmacenes? almacenDestino = jugador.Edificios
+            // Busca el almacén del jugador que acepta ese recurso
+            var almacenDestino = jugador.Edificios
                 .OfType<IAlmacenes>()
-                .FirstOrDefault(a => a.AceptaRecurso(recurso.Tipo)); //busca almmacecn mas cercano utiliza un lambda expression
+                .FirstOrDefault(a => a.AceptaRecurso(recurso.Tipo));
 
-            if (almacenDestino == null)
+            if (almacenDestino != null)
             {
-                Console.WriteLine("⚠️ No hay almacén específico para este recurso, se usará el almacén general del jugador.");
-                almacenDestino = jugador;
+                await aldeano.Recolectar(recurso, almacenDestino, mapa);
+                Console.WriteLine($"✅ {aldeano.Nombre} recolectó {recurso.Tipo} desde ({celda.X},{celda.Y}) y lo guardó en {almacenDestino.Name}.");
             }
-
-            await aldeano.Recolectar(recurso, almacenDestino, mapa);
-
-            centroCivico.AgregarAldeano(aldeano);
-
-            Console.WriteLine($"✅ {aldeano.Nombre} recolectó {recurso.Tipo} desde ({celda.X},{celda.Y}) y lo guardó en {almacenDestino.Name}.");
+            else
+            {
+                Console.WriteLine("⚠️ No hay almacén específico para este recurso, se usará el inventario del jugador.");
+                await aldeano.Recolectar(recurso, null!, mapa);
+                jugador.Almacenar(recurso.Tipo, recurso.CantidadDisponible);
+                Console.WriteLine($"✅ {aldeano.Nombre} recolectó {recurso.Tipo} desde ({celda.X},{celda.Y}) y lo guardó en el inventario del jugador.");
+            }
+            cc.AgregarAldeano(aldeano);
         }
 
-        public async Task SacarAldeanoYConstruirEdificio(IAlmacenes almacenes, Edificio edificio, int x, int y)
+
+        public async Task SacarAldeanoYConstruirEdificio(Jugador jugador, Edificio edificio, int x, int y)
         {
-            Aldeano? aldeano = centroCivico.SacarAldeano();
+            var cc = ObtenerCentroCivico(jugador);
+            Aldeano? aldeano = cc.SacarAldeano();
 
             if (aldeano == null)
             {
@@ -235,13 +242,42 @@ namespace Library
                 return;
             }
 
-            if (almacenes is Jugador jugador)
+            if (!jugador.IntentarPagar(edificio.Costo))
             {
-                jugador.Unidades.Remove(aldeano);
+                Console.WriteLine($"❌ No tienes suficientes recursos para construir un {edificio.Name}.");
+                cc.AgregarAldeano(aldeano);
+                return;
             }
 
-            await ConstruirEdificioConAldeano(almacenes, edificio, x, y, aldeano);
+            if (!mapa.EsCeldaValida(x, y))
+            {
+                Console.WriteLine($"❌ La posición ({x},{y}) no es válida en el mapa.");
+                cc.AgregarAldeano(aldeano);
+                return;
+            }
+
+            var celda = mapa.ObtenerCelda(x, y);
+            if (celda == null || celda.EstaOcupada)
+            {
+                Console.WriteLine($"❌ La celda ({x},{y}) ya está ocupada, no se puede construir ahí.");
+                cc.AgregarAldeano(aldeano);
+                return;
+            }
+
+            mapa.PosicionarEdificio(edificio, x, y);
+            await aldeano.Construir(x, y, edificio, mapa);
+
+            jugador.Edificios.Add(edificio);
+
+            if (edificio is Casa casa)
+            {
+                jugador.AumentarCapacidadPoblacional(casa.AumentoPoblacion);
+                Console.WriteLine($"🏡 Capacidad de población aumentada en +{casa.AumentoPoblacion}.");
+            }
+
+            Console.WriteLine($"✅ {edificio.Name} construido en ({x},{y}) por {aldeano.Nombre}.");
         }
+
         public void SacarUnidadDeCuartel(Cuartel cuartel, int destinoX, int destinoY)
         {
             Unidad? unidad = cuartel.SacarUnidad();
@@ -264,7 +300,7 @@ namespace Library
             Console.WriteLine($"✅ Unidad {unidad.Nombre} fue colocada en ({destinoX},{destinoY}) desde el Cuartel.");
         }
 
-        public void EntrenarUnidadEnCuartel(Cuartel cuartel)
+        public void EntrenarUnidadEnCuartel(Cuartel cuartel , Jugador jugador)
         {
             Console.WriteLine("\n--- ENTRENAR UNIDAD ---");
             Console.WriteLine("Elegí el tipo de unidad:");
@@ -288,7 +324,7 @@ namespace Library
 
             Console.WriteLine($"Costo de {tipo}: Madera={costo.Madera}, Piedra={costo.Piedra}, Oro={costo.Oro}, Alimento={costo.Alimento}");
 
-            if (!jugador1.IntentarPagar(costo))
+            if (!jugador.IntentarPagar(costo))
             {
                 Console.WriteLine("❌ No tenés suficientes recursos para entrenar esa unidad.");
                 return;
@@ -296,7 +332,7 @@ namespace Library
 
             Unidad nuevaUnidad = cuartel.EntrenarUnidad(tipo);
             cuartel.AgregarUnidad(nuevaUnidad);
-            jugador1.Unidades.Add(nuevaUnidad); 
+            jugador.Unidades.Add(nuevaUnidad); 
             Console.WriteLine($"✅ Unidad {nuevaUnidad.Nombre} entrenada y guardada dentro del Cuartel.");
         }
 
@@ -331,7 +367,7 @@ namespace Library
                 jugador.Edificios.Add(edificio);
                 if (edificio is Casa casa)
                 {
-                    jugador.CapacidadPoblacionMaxima += casa.AumentoPoblacion;
+                    jugador.AumentarCapacidadPoblacional(casa.AumentoPoblacion);
                     Console.WriteLine($"🏡 Capacidad de población aumentada en +{casa.AumentoPoblacion}.");
                 }
 

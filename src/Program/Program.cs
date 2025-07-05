@@ -21,20 +21,14 @@ namespace Program
                 Console.WriteLine("3. Vikingos");
                 Console.WriteLine("0. Volver atrás (salir)");
 
-                string opcionCivilizacion = Console.ReadLine();
+                string opcionCivilizacion = Console.ReadLine() ?? "";
 
                 switch (opcionCivilizacion)
                 {
                     case "1":
-                        tipoCivilizacion = "Japoneses";
-                        civilizacionElegida = true;
-                        break;
                     case "2":
-                        tipoCivilizacion = "Romanos";
-                        civilizacionElegida = true;
-                        break;
                     case "3":
-                        tipoCivilizacion = "Vikingos";
+                        tipoCivilizacion = opcionCivilizacion;
                         civilizacionElegida = true;
                         break;
                     case "0":
@@ -63,17 +57,17 @@ namespace Program
                 Console.WriteLine("9. Entrenar Unidades con tu cuartel (Crea Unidades)");
                 Console.WriteLine("10. Ver unidades dentro del Cuartel");
 
-                string opcion = Console.ReadLine();
+                string opcion = Console.ReadLine() ?? "";
 
                 switch (opcion)
                 {
                     case "1":
-                        fachada.MostrarAldeanos();
+                        fachada.MostrarAldeanos(fachada.Jugador1);
                         break;
 
                     case "2":
-                        fachada.MostrarEstado();
-                        fachada.MostrarAldeanos();
+                        fachada.MostrarEstado(fachada.Jugador1);
+                        fachada.MostrarAldeanos(fachada.Jugador1);
                         break;
 
                     case "3":
@@ -101,12 +95,12 @@ namespace Program
                         Console.WriteLine("1. Cuartel (madera: 50, piedra: 30, oro: 20)");
                         Console.WriteLine("2. Centro Cívico (madera: 20, piedra: 15, oro: 10)");
                         Console.WriteLine("3. Casa (madera: 20, piedra: 15, oro: 10)");
-                        Console.WriteLine("4. Almacen Madera: madera 20, piedra: 15, oro: 10, alimento: 0 ");
-                        Console.WriteLine("5. Almacen Piedra: madera 20, piedra: 15, oro: 10, alimento: 0");
-                        Console.WriteLine("6.Almacen Alimento: madera 20, piedra: 15, oro: 10, alimento: 0 ");
-                        Console.WriteLine("7.Almacen Oro :madera 20, piedra: 15, oro: 10, alimento: 0");
+                        Console.WriteLine("4. Almacén Madera (madera: 20, piedra: 15, oro: 10, alimento: 0)");
+                        Console.WriteLine("5. Almacén Piedra (madera: 20, piedra: 15, oro: 10, alimento: 0)");
+                        Console.WriteLine("6. Almacén Alimento (madera: 20, piedra: 15, oro: 10, alimento: 0)");
+                        Console.WriteLine("7. Almacén Oro (madera: 20, piedra: 15, oro: 10, alimento: 0)");
 
-                        string edificioElegido = Console.ReadLine();
+                        string edificioElegido = Console.ReadLine() ?? "";
                         Edificio? edificio = edificioElegido switch
                         {
                             "1" => new Cuartel(),
@@ -139,10 +133,12 @@ namespace Program
                             break;
                         }
 
+                        // Llamada simplificada: el facade gestiona inventario
                         await fachada.SacarAldeanoYConstruirEdificio(fachada.Jugador1, edificio, x, y);
                         break;
 
                     case "6":
+                        // Recolección simplificada: el facade gestiona inventario
                         await fachada.AldeanoRecolecta(fachada.Jugador1);
                         break;
 
@@ -156,7 +152,6 @@ namespace Program
 
                         Console.WriteLine("Coordenada X donde colocar la unidad:");
                         if (!int.TryParse(Console.ReadLine(), out int cx)) break;
-
                         Console.WriteLine("Coordenada Y donde colocar la unidad:");
                         if (!int.TryParse(Console.ReadLine(), out int cy)) break;
 
@@ -175,7 +170,7 @@ namespace Program
                             break;
                         }
 
-                        fachada.EntrenarUnidadEnCuartel(cuartelEntrenar);
+                        fachada.EntrenarUnidadEnCuartel(cuartelEntrenar, fachada.Jugador1);
                         break;
 
                     case "10":
