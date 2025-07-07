@@ -231,6 +231,7 @@ namespace Library
         }
 
 
+
         public async Task SacarAldeanoYConstruirEdificio(Jugador jugador, Edificio edificio, int x, int y)
         {
             var cc = ObtenerCentroCivico(jugador);
@@ -335,6 +336,111 @@ namespace Library
             jugador.Unidades.Add(nuevaUnidad); 
             Console.WriteLine($"✅ Unidad {nuevaUnidad.Nombre} entrenada y guardada dentro del Cuartel.");
         }
+
+        public async Task AtacarUnidadSimple(Jugador atacanteJugador)
+        {
+            Unidad unidadAtacante = null;
+
+            // Buscamos una unidad que pueda atacar (que implemente IAtacante)
+            foreach (var unidad in atacanteJugador.Unidades)
+            {
+                if (unidad is IAtacante)
+                {
+                    unidadAtacante = unidad;
+                    break;
+                }
+            }
+
+            if (unidadAtacante == null)
+            {
+                Console.WriteLine("❌ No tenés ninguna unidad atacante.");
+                return;
+            }
+
+            Console.WriteLine($"✅ Usando {unidadAtacante.Nombre} en ({unidadAtacante.X},{unidadAtacante.Y}) para atacar.");
+
+            Console.Write("👉 Ingresá la coordenada X del objetivo: ");
+            if (!int.TryParse(Console.ReadLine(), out int x))
+            {
+                Console.WriteLine("❌ Coordenada X inválida.");
+                return;
+            }
+
+            Console.Write("👉 Ingresá la coordenada Y del objetivo: ");
+            if (!int.TryParse(Console.ReadLine(), out int y))
+            {
+                Console.WriteLine("❌ Coordenada Y inválida.");
+                return;
+            }
+
+            Celda celda = mapa.ObtenerCelda(x, y);
+
+            if (celda == null)
+            {
+                Console.WriteLine("❌ Esa celda no existe.");
+                return;
+            }
+
+            IAtacable objetivo = null;
+
+            if (celda.UnidadOcupante != null && celda.UnidadOcupante is IAtacable atacableUnidad)
+            {
+                objetivo = atacableUnidad;
+            }
+            else if (celda.Edificio != null && celda.Edificio is IAtacable atacableEdificio)
+            {
+                objetivo = atacableEdificio;
+            }
+
+            if (objetivo == null)
+            {
+                Console.WriteLine("❌ No hay un objetivo atacable en esa celda.");
+                return;
+            }
+
+            if (EsPropio(objetivo, atacanteJugador))
+            {
+                Console.WriteLine("❌ No podés atacar tus propias unidades o edificios.");
+                return;
+            }
+
+            IAtacante atacante = (IAtacante)unidadAtacante;
+            await atacante.Atacar(objetivo);
+
+            Console.WriteLine("⚔️ Ataque realizado exitosamente.");
+
+            // Mostrar vida restante después del ataque
+            if (objetivo is Unidad unidadObjetivo)
+            {
+                Console.WriteLine($"Vida restante de la unidad: {unidadObjetivo.VidaActual}/{unidadObjetivo.VidaMaxima}");
+            }
+            else if (objetivo is Edificio edificioObjetivo)
+            {
+                Console.WriteLine($"Vida restante del edificio: {edificioObjetivo.VidaActual}/{edificioObjetivo.VidaMaxima}");
+            }
+        }
+
+
+        private bool EsPropio(IAtacable objetivo, Jugador jugador)
+        {
+  
+            foreach (var unidad in jugador.Unidades)
+            {
+                if (unidad == objetivo)
+                    return true;
+            }
+
+
+            foreach (var edificio in jugador.Edificios)
+            {
+                if (edificio == objetivo)
+                    return true;
+            }
+
+            return false; 
+        }
+
+
 
 
         public async Task ConstruirEdificioConAldeano(IAlmacenes almacenes, Edificio edificio, int x, int y, Aldeano aldeano)

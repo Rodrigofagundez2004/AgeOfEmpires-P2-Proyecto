@@ -55,7 +55,8 @@ namespace Program
                 Console.WriteLine("7. Sacar unidad desde el Cuartel");
                 Console.WriteLine("8. Salir");
                 Console.WriteLine("9. Entrenar Unidades con tu cuartel (Crea Unidades)");
-                Console.WriteLine("10. Ver unidades dentro del Cuartel");
+                Console.WriteLine("10. Atacar ");
+                Console.WriteLine("11. Ver unidades dentro del Cuartel");
 
                 string opcion = Console.ReadLine() ?? "";
 
@@ -133,12 +134,10 @@ namespace Program
                             break;
                         }
 
-                        // Llamada simplificada: el facade gestiona inventario
                         await fachada.SacarAldeanoYConstruirEdificio(fachada.Jugador1, edificio, x, y);
                         break;
 
                     case "6":
-                        // Recolección simplificada: el facade gestiona inventario
                         await fachada.AldeanoRecolecta(fachada.Jugador1);
                         break;
 
@@ -174,6 +173,10 @@ namespace Program
                         break;
 
                     case "10":
+                        await fachada.AtacarUnidadSimple(fachada.Jugador1);
+                        break;
+
+                    case "11":
                         var cuartelMostrar = fachada.Jugador1.Edificios.OfType<Cuartel>().FirstOrDefault();
                         if (cuartelMostrar == null)
                         {
