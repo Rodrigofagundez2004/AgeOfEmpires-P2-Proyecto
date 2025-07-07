@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace RTSDiscordBot
 {
@@ -25,7 +26,8 @@ namespace RTSDiscordBot
                     {
                         GatewayIntents = GatewayIntents.Guilds | GatewayIntents.GuildMessages,
                         AlwaysDownloadUsers = false,
-                        MessageCacheSize = 100
+                        MessageCacheSize = 100,
+                        LogLevel = LogSeverity.Info
                     };
 
                     services.AddSingleton(config);
@@ -33,6 +35,7 @@ namespace RTSDiscordBot
                     services.AddSingleton<GameManager>();
                     services.AddSingleton<CommandHandler>();
                     services.AddHostedService<DiscordBotService>();
+                    services.AddHostedService<GameCleanupService>();
                 });
     }
 
@@ -41,12 +44,18 @@ namespace RTSDiscordBot
         private readonly DiscordSocketClient _client;
         private readonly CommandHandler _commandHandler;
         private readonly IConfiguration _configuration;
+        private readonly ILogger<DiscordBotService> _logger;
 
-        public DiscordBotService(DiscordSocketClient client, CommandHandler commandHandler, IConfiguration configuration)
+        public DiscordBotService(
+            DiscordSocketClient client, 
+            CommandHandler commandHandler, 
+            IConfiguration configuration,
+            ILogger<DiscordBotService> logger)
         {
             _client = client;
             _commandHandler = commandHandler;
             _configuration = configuration;
+            _logger = logger;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -58,8 +67,8 @@ namespace RTSDiscordBot
             
             if (string.IsNullOrEmpty(token))
             {
-                Console.WriteLine("❌ TOKEN NO ENCONTRADO!");
-                Console.WriteLine("🔧 Crea el archivo appsettings.json con tu token");
+                _logger.LogError("TOKEN NO ENCONTRADO!");
+                _logger.LogError("Crea el archivo appsettings.json con tu token");
                 return;
             }
 
@@ -69,29 +78,35 @@ namespace RTSDiscordBot
             {
                 await _client.LoginAsync(TokenType.Bot, token);
                 await _client.StartAsync();
+                
+                _logger.LogInformation("Bot iniciado exitosamente");
+                
                 await Task.Delay(Timeout.Infinite, stoppingToken);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"❌ Error conectando: {ex.Message}");
+                _logger.LogError(ex, "Error conectando el bot");
             }
         }
 
         private async Task ReadyAsync()
         {
-            Console.WriteLine($"🤖 ¡Bot conectado como {_client.CurrentUser}!");
-            Console.WriteLine($"📊 Conectado a {_client.Guilds.Count} servidores");
+            _logger.LogInformation($"Bot conectado como {_client.CurrentUser}!");
+            _logger.LogInformation($"Conectado a {_client.Guilds.Count} servidores");
+            
+            // Configurar estado del bot
+            await _client.SetGameAsync("RTS Discord | /ayuda", type: ActivityType.Playing);
             
             try
             {
                 await _commandHandler.RegisterCommandsAsync();
-                Console.WriteLine("✅ Comandos RTS registrados exitosamente");
-                Console.WriteLine("🎮 ¡Los jugadores ya pueden usar /buscar-partida!");
+                _logger.LogInformation("Comandos RTS registrados exitosamente");
+                _logger.LogInformation("Los jugadores ya pueden usar /buscar-partida!");
             }
             catch (HttpException ex)
             {
-                Console.WriteLine($"❌ Error registrando comandos: {ex.Message}");
-                Console.WriteLine("⏳ Los comandos pueden tardar hasta 1 hora en aparecer");
+                _logger.LogError(ex, "Error registrando comandos");
+                _logger.LogWarning("Los comandos pueden tardar hasta 1 hora en aparecer");
             }
         }
 
@@ -99,13 +114,33 @@ namespace RTSDiscordBot
         {
             var emoji = log.Severity switch
             {
-                LogSeverity.Error => "❌",
-                LogSeverity.Warning => "⚠️",
-                LogSeverity.Info => "ℹ️",
-                _ => "📝"
+                LogSeverity.Critical => "[CRIT]",
+                LogSeverity.Error => "[ERROR]",
+                LogSeverity.Warning => "[WARN]",
+                LogSeverity.Info => "[INFO]",
+                LogSeverity.Verbose => "[VERB]",
+                LogSeverity.Debug => "[DEBUG]",
+                _ => "[LOG]"
             };
 
-            Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] {emoji} {log.Source}: {log.Message}");
+            var logLevel = log.Severity switch
+            {
+                LogSeverity.Critical => LogLevel.Critical,
+                LogSeverity.Error => LogLevel.Error,
+                LogSeverity.Warning => LogLevel.Warning,
+                LogSeverity.Info => LogLevel.Information,
+                LogSeverity.Verbose => LogLevel.Debug,
+                LogSeverity.Debug => LogLevel.Trace,
+                _ => LogLevel.Information
+            };
+
+            _logger.Log(logLevel, "{Emoji} {Source}: {Message}", emoji, log.Source, log.Message);
+            
+            if (log.Exception != null)
+            {
+                _logger.LogError(log.Exception, "Excepcion adicional:");
+            }
+
             return Task.CompletedTask;
         }
     }
