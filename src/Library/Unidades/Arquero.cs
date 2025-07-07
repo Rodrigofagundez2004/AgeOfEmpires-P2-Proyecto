@@ -17,16 +17,16 @@ namespace Library
 
         public override async Task<int> Atacar(IAtacable objetivo)
         {
-            return await objetivo.RecibirDaño(Ataque);
+            return await objetivo.RecibirDanio(Ataque);
         }
 
-        public override async Task<int> RecibirDaño(int daño)
+        public override async Task<int> RecibirDanio(int danio)
         {
-            int dañoEfectivo = daño - Defensa;
-            if (dañoEfectivo < 0)
-                dañoEfectivo = 0;
+            int danioEfectivo = danio - Defensa;
+            if (danioEfectivo < 0)
+                danioEfectivo = 0;
 
-            VidaActual -= dañoEfectivo;
+            VidaActual -= danioEfectivo;
             if (VidaActual < 0)
                 VidaActual = 0;
 

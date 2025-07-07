@@ -123,7 +123,7 @@ namespace Library
 
             jugador.Unidades.Add(unidadEspecial);
             mapa.PosicionarUnidad(unidadEspecial, 2, 1);
-            Console.WriteLine($"\n🎖️ Unidad especial añadida: {unidadEspecial.Nombre} en (2,1).");
+            Console.WriteLine($"\n🎖️ Unidad especial aniadida: {unidadEspecial.Nombre} en (2,1).");
         }
 
         public void MostrarAldeanos(Jugador jugador)
@@ -187,9 +187,9 @@ namespace Library
             }
 
             Celda? celda = null;
-            for (int x = 0; x < Mapa.Tamaño; x++)
+            for (int x = 0; x < Mapa.Tamanio; x++)
             {
-                for (int y = 0; y < Mapa.Tamaño; y++)
+                for (int y = 0; y < Mapa.Tamanio; y++)
                 {
                     if (mapa.Celdas[x, y].Recurso == recurso)
                     {

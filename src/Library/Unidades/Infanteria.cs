@@ -4,7 +4,7 @@ namespace Library
 {
     public class Infanteria : Unidad, IAtacante, IAtacable
     {
-        public Infanteria(string nombre = "Infantería", int x = 0, int y = 0) :
+        public Infanteria(string nombre = "Infanternia", int x = 0, int y = 0) :
             base(nombre, x, y, Iconos.Infanteria, costoComida: 40, tiempoSegundos: 5)
         {
             this.VidaActual = 100;
@@ -15,12 +15,12 @@ namespace Library
             this.Tipo= TipoUnidad.Infanteria;
         }
 
-        public override async Task<int> RecibirDaño(int daño)
+        public override async Task<int> RecibirDanio(int danio)
         {
-            int dañoEfectivo = daño - Defensa;
-            if (dañoEfectivo < 0)
-                dañoEfectivo = 0;
-            VidaActual -= dañoEfectivo;
+            int danioEfectivo = danio - Defensa;
+            if (danioEfectivo < 0)
+                danioEfectivo = 0;
+            VidaActual -= danioEfectivo;
             if (VidaActual < 0)
                 VidaActual = 0;
 
@@ -30,7 +30,7 @@ namespace Library
 
         public override async Task<int> Atacar(IAtacable objetivo)
         {
-            return await objetivo.RecibirDaño(Ataque);
+            return await objetivo.RecibirDanio(Ataque);
         }
 
         protected override int GetDelay()

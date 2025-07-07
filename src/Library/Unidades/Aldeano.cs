@@ -18,13 +18,13 @@ namespace Library
             this.Tipo = TipoUnidad.Aldeano;
         }
 
-        public override async Task<int> RecibirDaño(int daño)
+        public override async Task<int> RecibirDanio(int danio)
         {
-            int dañoEfectivo = daño - Defensa;
-            if (dañoEfectivo < 0)
-                dañoEfectivo = 0;
+            int danioEfectivo = danio - Defensa;
+            if (danioEfectivo < 0)
+                danioEfectivo = 0;
 
-            VidaActual -= dañoEfectivo;
+            VidaActual -= danioEfectivo;
             if (VidaActual < 0)
                 VidaActual = 0;
 
@@ -77,7 +77,7 @@ namespace Library
                     break;
             }
 
-            int resultado = await objetivo.RecibirDaño(Ataque);
+            int resultado = await objetivo.RecibirDanio(Ataque);
             await Task.Delay(500);
             Icono = Iconos.Aldeano;
             return resultado;
@@ -99,7 +99,7 @@ namespace Library
                 Icono = Iconos.Aldeano;
 
             mapa.PosicionarEdificio(estructura, x, y);
-            await Task.Delay(20000); // tiempo de construcción
+            await Task.Delay(20000); // tiempo de construccinin
             Icono = Iconos.Aldeano;
         }
 

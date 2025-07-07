@@ -89,8 +89,8 @@
         // Legionario atacando
         LegionarioVsInfanteria = 'l',
         LegionarioVsArquero = 'q',
-        LegionarioVsCaballeria = 'Ñ',
-        LegionarioVsAldeano = 'ñ',
+        LegionarioVsCaballeria = '+',
+        LegionarioVsAldeano = '-',
         LegionarioVsSamurai = '¬',
         LegionarioVsBerserker = '¯',
 

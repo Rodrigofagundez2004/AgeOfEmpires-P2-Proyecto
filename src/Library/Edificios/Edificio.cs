@@ -25,9 +25,9 @@ namespace Library
             Costo = costo;
         }
 
-        public virtual async Task<int> RecibirDaño(int daño)
+        public virtual async Task<int> RecibirDanio(int danio)
         {
-            VidaActual -= daño;
+            VidaActual -= danio;
             if (VidaActual < 0)
             {
                 VidaActual = 0;

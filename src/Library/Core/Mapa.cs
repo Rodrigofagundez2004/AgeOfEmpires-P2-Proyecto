@@ -6,25 +6,25 @@ namespace Library
 {
     public class Mapa
     {
-        public const int Tamaño = 100;
+        public const int Tamanio = 100;
         public Celda[,] Celdas { get; private set; }
         private bool[,] Bosques;
         private bool[,] Minas;
 
         public Mapa()
         {
-            Celdas = new Celda[Tamaño, Tamaño];
-            Bosques = new bool[Tamaño, Tamaño];
-            Minas = new bool[Tamaño, Tamaño];
+            Celdas = new Celda[Tamanio, Tamanio];
+            Bosques = new bool[Tamanio, Tamanio];
+            Minas = new bool[Tamanio, Tamanio];
 
-            for (int x = 0; x < Tamaño; x++)
-                for (int y = 0; y < Tamaño; y++)
+            for (int x = 0; x < Tamanio; x++)
+                for (int y = 0; y < Tamanio; y++)
                     Celdas[x, y] = new Celda(x, y);
         }
 
         public Celda ObtenerCelda(int x, int y)
         {
-            if (x < 0 || y < 0 || x >= Tamaño || y >= Tamaño)
+            if (x < 0 || y < 0 || x >= Tamanio || y >= Tamanio)
                 throw new ArgumentOutOfRangeException("Te saliste del mapa");
 
             return Celdas[x, y];
@@ -37,17 +37,17 @@ namespace Library
                 var celda = ObtenerCelda(x, y);
 
                 if (celda.EstaOcupada)
-                    throw new InvalidOperationException("La celda ya está ocupada por otra unidad o edificio.");
+                    throw new InvalidOperationException("La celda ya estni ocupada por otra unidad o edificio.");
 
                 celda.Edificio = edificio;
             }
             catch (ArgumentOutOfRangeException ex)
             {
-                Console.WriteLine($"[ERROR - Coordenadas inválidas] {ex.Message}");
+                Console.WriteLine($"[ERROR - Coordenadas invnilidas] {ex.Message}");
             }
             catch (InvalidOperationException ex)
             {
-                Console.WriteLine($"[ERROR - Construcción no permitida] {ex.Message}");
+                Console.WriteLine($"[ERROR - Construccinin no permitida] {ex.Message}");
             }
             catch (Exception ex)
             {
@@ -59,7 +59,7 @@ namespace Library
         {
             var celda = ObtenerCelda(x, y);
             if (celda.EstaOcupada)
-                throw new Exception("La celda ya está ocupada");
+                throw new Exception("La celda ya estni ocupada");
 
             celda.UnidadOcupante = unidad;
             unidad.MoverA(x, y);
@@ -81,7 +81,7 @@ namespace Library
             }
             catch (ArgumentOutOfRangeException ex)
             {
-                Console.WriteLine($"[ERROR - Movimiento inválido] {ex.Message}");
+                Console.WriteLine($"[ERROR - Movimiento invnilido] {ex.Message}");
             }
             catch (Exception ex) when (ex.Message == "No se puede mover, destino ocupado")
             {
@@ -103,9 +103,9 @@ namespace Library
 
         public void MostrarMapa()
         {
-            for (int y = 0; y < Tamaño; y++)
+            for (int y = 0; y < Tamanio; y++)
             {
-                for (int x = 0; x < Tamaño; x++)
+                for (int x = 0; x < Tamanio; x++)
                 {
                     var celda = Celdas[x, y];
 
@@ -148,13 +148,13 @@ namespace Library
         }
 
         public bool EsCeldaValida(int x, int y)
-            => x >= 0 && y >= 0 && x < Tamaño && y < Tamaño;
+            => x >= 0 && y >= 0 && x < Tamanio && y < Tamanio;
 
         public void GenerarMinasOro(int cantidad)
         {
             var libres = new List<(int x, int y)>();
-            for (int xx = 0; xx < Tamaño; xx++)
-                for (int yy = 0; yy < Tamaño; yy++)
+            for (int xx = 0; xx < Tamanio; xx++)
+                for (int yy = 0; yy < Tamanio; yy++)
                     if (!Celdas[xx, yy].EstaOcupada && !Minas[xx, yy] && Celdas[xx, yy].Edificio == null)
                         libres.Add((xx, yy));
 
@@ -169,8 +169,8 @@ namespace Library
         public void GenerarMinasPiedras(int cantidad)
         {
             var libres = new List<(int x, int y)>();
-            for (int xx = 0; xx < Tamaño; xx++)
-                for (int yy = 0; yy < Tamaño; yy++)
+            for (int xx = 0; xx < Tamanio; xx++)
+                for (int yy = 0; yy < Tamanio; yy++)
                     if (!Celdas[xx, yy].EstaOcupada && !Minas[xx, yy] && Celdas[xx, yy].Edificio == null)
                         libres.Add((xx, yy));
 
@@ -185,8 +185,8 @@ namespace Library
         public void GenerarBosques(int cantidad)
         {
             var libres = new List<(int x, int y)>();
-            for (int xx = 0; xx < Tamaño; xx++)
-                for (int yy = 0; yy < Tamaño; yy++)
+            for (int xx = 0; xx < Tamanio; xx++)
+                for (int yy = 0; yy < Tamanio; yy++)
                     if (!Celdas[xx, yy].EstaOcupada && !Bosques[xx, yy] && Celdas[xx, yy].Edificio == null)
                         libres.Add((xx, yy));
 
@@ -218,9 +218,9 @@ namespace Library
             IRecursos? recursoMasCercano = null;
             int menorDistancia = int.MaxValue;
 
-            for (int x = 0; x < Tamaño; x++)
+            for (int x = 0; x < Tamanio; x++)
             {
-                for (int y = 0; y < Tamaño; y++)
+                for (int y = 0; y < Tamanio; y++)
                 {
                     var recurso = ObtenerRecursoEn(x, y);
                     if (recurso == null || recurso.EstaAgotado)

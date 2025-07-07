@@ -62,13 +62,13 @@ namespace Library
             Y = nuevaY;
         }
 
-        public virtual async Task<int> RecibirDaño(int daño)
+        public virtual async Task<int> RecibirDanio(int danio)
         {
-            int dañoEfectivo = daño - Defensa;
-            if (dañoEfectivo < 0)
-                dañoEfectivo = 0;
+            int danioEfectivo = danio - Defensa;
+            if (danioEfectivo < 0)
+                danioEfectivo = 0;
 
-            VidaActual -= dañoEfectivo;
+            VidaActual -= danioEfectivo;
             if (VidaActual < 0)
                 VidaActual = 0;
 
@@ -78,21 +78,21 @@ namespace Library
 
         public virtual async Task<int> Atacar(IAtacable objetivo)
         {
-            int daño = Ataque;
+            int danio = Ataque;
 
             if (objetivo is Unidad unidad)
             {
                 if (Ventajas.TieneVentaja(this.Tipo, unidad.Tipo))
                 {
-                    daño += 20;
+                    danio += 20;
                 }
             }
             else if (objetivo is Edificio)
             {
-                daño /= 2;
+                danio /= 2;
             }
 
-            return await objetivo.RecibirDaño(daño);
+            return await objetivo.RecibirDanio(danio);
         }
 
         public abstract Task RealizarAccion();
